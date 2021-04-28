@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/headEstudent :: headEstudiante"></head>
+
+<body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+          
+        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+      		 <nav th:replace="layout/topbar :: topbar"></nav>
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-3 d-none d-lg-block" >
+            
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 th:if="${infop==null}" class="h4 text-gray-900 mb-4">Edicion de la propuesta</h1>
+                                <h1 th:if="${infop!=null}" class="h4 text-gray-900 mb-4">Usted aun no tiene ningun proyecto registrado por favor registre uno</h1>
+                            </div>
+                            <form class="user" method="post" th:action="@{/estudiante/guardar-edicion}" th:object="${propuesta}" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label class="label text-dark" for="titulo">Titulo: </label>
+                                    <input type="text" class="form-control text-dark" id="titulo"
+                                        placeholder="titulo" th:field="*{titulo}">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="label text-dark" for="descripcion">Descripcion: </label>
+                                    <textarea placeholder="Descripcion de la propuesta" th:field="*{decripcion}" class="form-control  text-dark" id="descripcion" cols="34" rows="8"></textarea>
+                                  <div class="text-danger" th:if="${#fields.hasErrors('decripcion')}" th:errors="*{decripcion}"></div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                    <label class="label text-dark" for="documento">Propuesta: </label>
+                                    <input type="file" class="form-control" id="documento" name="archivo">
+                                      <div class="text-danger" th:if="${archivo!=null}" th:text="${archivo}"></div>
+                                   
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="label text-dark" for="tipo-proyecto">Tipo proyecto: </label>
+                                    <select class="form-control" name="tipo">
+                                        <option value=-1 selected>Selecciones el tipo</option>
+                                        <option th:each="tipe: ${tipes}" th:value="${tipe.idTipoProyecto}" th:text="${tipe.name}">One</option>
+                                        
+                                      </select>
+                                       <div class="text-danger" th:if="${tipo!=null}" th:text="${tipo}"></div>
+                                 </div> 
+                                      
+                                </div>
+
+                             <input type="hidden" th:field="*{documento}">   
+                            <input type="hidden" th:field="*{idProyecto}">
+                                <input type="submit" class="btn btn-danger btn-user btn-block" value="Actualizar Propuesta">
+                                  
+                                
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    </div>
+ <div th:replace="layout/import-js :: import-js"></div>
+
+</body>
+
+</html>

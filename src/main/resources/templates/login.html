@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login Template</title>
+  <link th:href="@{css/css.css}" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{css/materialdesignicons.min.css}">
+  <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{css/login.css}">
+<script data-dapp-detection="">!function(){let e=!1;function n(){if(!e){const n=document.createElement("meta");n.name="dapp-detected",document.head.appendChild(n),e=!0}}if(window.hasOwnProperty("ethereum")){if(window.__disableDappDetectionInsertion=!0,void 0===window.ethereum)return;n()}else{var t=window.ethereum;Object.defineProperty(window,"ethereum",{configurable:!0,enumerable:!1,set:function(e){window.__disableDappDetectionInsertion||n(),t=e},get:function(){if(!window.__disableDappDetectionInsertion){const e=arguments.callee;e&&e.caller&&e.caller.toString&&-1!==e.caller.toString().indexOf("getOwnPropertyNames")||n()}return t}})}}();</script></head>
+<body>
+  <main>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-6 login-section-wrapper">
+          <div class="brand-wrapper">
+            <img th:src="@{images/ufps.png}" alt="logo" class="logo">
+          </div>
+          <div class="login-wrapper my-auto">
+            <h1 class="login-title">Log in</h1>
+            <form th:action="@{'/login'}" method="post">
+              <div class="form-group">
+                <label for="username">Codigo</label>
+                <input type="text" name="username" id="username" class="form-control" placeholder="1150000">
+              </div>
+              <div class="form-group mb-4">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" class="form-control" placeholder="enter your passsword">
+              </div>
+              <input name="login" id="login" class="btn btn-block btn-danger btn-login " type="submit" value="Login">
+            </form>
+            <a href="https://www.bootstrapdash.com/demo/login-template-free-1/#!" class="forgot-password-link">Forgot password?</a>
+            <p th:if="${error!=null}" class="text-danger" th:text="${error +'*'}"></p>
+            <p class="login-wrapper-footer-text">Don't have an account? <a th:href="@{/sign-up/student}" class="text-reset">Register here</a></p>
+          </div>
+        </div>
+        <div class="col-sm-6 px-0 d-none d-sm-block">
+          <img th:src="@{images/ufps.png}"  alt="login image" class="login-img">
+        </div>
+      </div>
+    </div>
+  </main>
+  <script th:src="@{js/jquery-3.4.1.min.js.descarga}"></script>
+  <script th:src="@{js/popper.min.js.descarga}"></script>
+  <script th:src="@{js/bootstrap.min.js.descarga}"></script>
+
+
+</body></html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/headEstudent :: headEstudiante"></head>
+
+<body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+          
+        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+      		 <nav th:replace="layout/topbar :: topbar"></nav>
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-3 d-none d-lg-block" >
+            
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Informacion de la Personal</h1>
+                            </div>
+                          
+                         <form class="user">
+                          
+                          
+                          <div class="form-group">
+                                    
+                                        
+                                        <label class="label text-dark" for="codigo">Codigo </label>
+                                        <input type="text" th:value="${estudiante.codigo}" readonly class="form-control" id="documento" name="nombre">
+                                       
+                                    </div>
+                          
+                                <div class="form-group row">
+                                    
+                                        <div class="col-sm-6">
+                                        <label class="label text-dark" for="documento">Nombres: </label>
+                                        <input type="text" th:value="${estudiante.nombres}" readonly class="form-control" id="documento" name="nombre">
+                                       
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" for="tipo-proyecto">Apellidos </label>
+                                        <input type="text" th:value="${estudiante.apellidos}"  readonly class="form-control" id="apellidos" name="apellidos">
+                                     </div> 
+                                          
+                                    </div>
+
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                        <label class="label text-dark" for="documento">Telefono </label>
+                                        <input name="number" th:value="${estudiante.telefono}" readonly placeholder="telefono" class="form-control" id="promedio"/>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" for="tipo-proyecto">Direccion: </label>
+                                        <input type="text" readonly th:value="${estudiante.direccion}" class="form-control" id="Direccion" name="direccion">
+                                     </div> 
+                                    </div>
+
+                                <div class="form-group">
+                                    <label class="label text-dark" for="descripcion">Email </label>
+                                    <input name="email" th:value="${estudiante.email}" readonly placeholder="Email" class="form-control" id="email"/>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                    <label class="label text-dark" for="documento">Promedio </label>
+                                    <input type="text" th:value="${estudiante.estudiante.promedio}" readonly placeholder="Promeedio" class="form-control"/>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="label text-dark" for="tipo-proyecto">Semestre: </label>
+                                    <input type="text" th:value="${estudiante.estudiante.semestre}" readonly class="form-control" />
+                                 </div> 
+                                      
+                                </div>
+
+                                
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    </div>
+ <div th:replace="layout/import-js :: import-js"></div>
+
+</body>
+
+</html>

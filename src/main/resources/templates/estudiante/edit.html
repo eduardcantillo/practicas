@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head">
+</head>
+
+
+<body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+          
+        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+      		 <nav th:replace="layout/topbar :: topbar"></nav>
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-3 d-none d-lg-block" >
+            
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Editar Informacion Personal</h1>
+                            </div>
+                          
+                          <form class="user" th:action="@{/estudiante/guardar-estudiante}" method="post" th:object="${usuario}">
+                          
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="name"
+                                        th:field="*{nombres}"
+                                            placeholder="First Name">
+                                            <div class="text-danger" th:if="${#fields.hasErrors('nombres')}" th:errors="*{nombres}"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="lastName"
+                                         th:field="*{apellidos}"
+                                            placeholder="Last Name">
+                                             <div class="text-danger" th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}"></div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        
+                                            <input type="text" class="form-control form-control-user"
+                                                id="telefono" th:field="*{telefono}"  placeholder="Telefono"  required>
+                                                 <div class="text-danger" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></div>
+                                       
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" step="0.1" class="form-control form-control-user"
+                                        th:field="*{direccion}"
+                                            id="direccion"  placeholder="direccion" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user" id="email"
+                                     th:field="*{email}"
+                                        placeholder="Email Address">
+                                        
+                                         <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        
+                                            <input type="number" class="form-control form-control-user"
+                                                id="semestre" th:value="${semestre}"name="semestre" placeholder="Semestre " min="8" max="15" required>
+                                       
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" step="0.1" class="form-control form-control-user"
+                                            id="promedio" th:value="${promedio}" name="promedio" placeholder="promedio" min="3.1" max="5.0" required>
+                                    </div>
+                                    
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class=" form-control btn btn-danger" value="Guardar Informacion">
+                                </div>
+                                <input type="hidden" class="form-control form-control-user" id="username"
+                                    th:field="*{password}"
+                                        placeholder="Codigo">
+                                <input type="hidden" class="form-control form-control-user" id="username"
+                                    th:field="*{codigo}"
+                                        placeholder="Codigo">
+ 
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    </div>
+ <div th:replace="layout/import-js :: import-js"></div>
+</body>
+</html>
