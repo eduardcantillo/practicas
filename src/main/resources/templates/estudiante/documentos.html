@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/headEstudent :: headEstudiante"></head>
+
+<body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+          
+        <div id="content-wrapper" class="d-flex flex-column">
+        
+      		 <nav th:replace="layout/topbar :: topbar"></nav>
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-2 d-none d-lg-block" >
+            
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="p-5">
+                            
+                         
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Documentos</h1>
+                    <p class="mb-4">Documentos cargados, corresponden a la documentacion correspondiente del proyecto </p>
+					<p class="mb-4"><a th:href="@{/estudiante/add-documento}" class="btn btn-success">Agregar documentos </a> </p>
+                    <!-- DataTales Example -->
+                    
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Documentos del proyecto</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Descripcion</th>
+                                            <th>Ver</th>
+                                            <th>Eliminar</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="doc: ${documentos}">
+                                        
+                                            <td th:text="${doc.nombre}">Tiger Nixon</td>
+                                            <td th:text="${doc.descripcion}">System Architect</td>
+                                            <td ><a class="btn btn-primary" th:href="@{'/estudiante/download-document/'+${doc.url}}">Descargar </a></td>
+                                           	<td ><a class="btn btn-danger" th:href="@{'/estudiante/eliminar-documento/'+${doc.idDocumento}}">Eliminar</a></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+              
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    
+ <div th:replace="layout/import-js :: import-js-table"></div>
+
+</body>
+
+</html>

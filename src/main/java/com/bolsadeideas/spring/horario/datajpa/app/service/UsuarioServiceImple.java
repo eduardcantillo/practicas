@@ -14,9 +14,6 @@ public class UsuarioServiceImple implements IUsuarioService {
 	@Autowired
 	private UsuarioDao user;
 	
-
-
-	
 	@Autowired
 	private IEstudianteDao estudiante;
 	

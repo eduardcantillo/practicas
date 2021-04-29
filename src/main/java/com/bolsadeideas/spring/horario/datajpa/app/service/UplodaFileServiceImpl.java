@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
+@Primary
 public class UplodaFileServiceImpl implements IUploadService {
 
 	private static final String UPLOAD = "propuestas";
@@ -50,8 +52,7 @@ public class UplodaFileServiceImpl implements IUploadService {
 		if (archivo.exists() && archivo.canRead()) {
 			return archivo.delete();
 		}
-		
-		return false;
+			return false;
 
 	}
 

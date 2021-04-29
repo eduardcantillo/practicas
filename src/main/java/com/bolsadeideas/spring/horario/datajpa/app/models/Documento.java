@@ -2,6 +2,7 @@ package com.bolsadeideas.spring.horario.datajpa.app.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 
 /**
@@ -19,8 +20,10 @@ public class Documento implements Serializable {
 	@Column(name="id_documento")
 	private int idDocumento;
 
-	private int funcion;
+	@NotBlank(message="El campo dela descripcion no puede ser vacio")
+	private String descripcion;
 
+	@NotBlank(message="El campo del nombre no puede ser vacio")
 	private String nombre;
 
 	private String url;
@@ -41,12 +44,12 @@ public class Documento implements Serializable {
 		this.idDocumento = idDocumento;
 	}
 
-	public int getFuncion() {
-		return this.funcion;
+	public String getDescripcion() {
+		return this.descripcion;
 	}
 
-	public void setFuncion(int funcion) {
-		this.funcion = funcion;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public String getNombre() {

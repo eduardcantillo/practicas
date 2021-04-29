@@ -21,25 +21,25 @@
             <!-- Nav Item - Dashboard -->
             <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (personal!=null)? 'nav-item active': 'nav-item'}">
                 <a class="nav-link" th:href="@{/estudiante/info}">
-                   <span> <i class="fas fa-fw fa-tachometer-alt"></i>
+                   <span> <i class="fas fa-user"></i>
                     Informacion Personal</span></a>
             </li>
             
              <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (info!=null)? 'nav-item active': 'nav-item'}">
                 <a class="nav-link" th:href="@{/estudiante/editar-info}">
-                   <span> <i class="fas fa-fw fa-tachometer-alt"></i>
+                   <span> <i class="fas fa-user-edit"></i>
                     Editar Informacion personal</span></a>
             </li>
             
              <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infop!=null)? 'nav-item active': 'nav-item'}">
                 <a class="nav-link" th:href="@{/estudiante/info-propuesta}">
-                   <span> <i class="fas fa-fw fa-tachometer-alt"></i>
+                   <span> <i class="far fa-folder"></i>
                     Informacion Proyecto</span></a>
             </li>
             
             <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infoe!=null)? 'nav-item active': 'nav-item'}">
                 <a class="nav-link" th:href="@{/estudiante/editar-propuesta}">
-                   <span> <i class="fas fa-fw fa-tachometer-alt"></i>
+                   <span><i class="fas fa-edit"></i>
                     Editar Proyecto</span></a>
             </li>
             

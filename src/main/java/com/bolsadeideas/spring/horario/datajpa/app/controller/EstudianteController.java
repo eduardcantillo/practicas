@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,20 +26,23 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.bolsadeideas.spring.horario.datajpa.app.dao.DocumentoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.EstadoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.ProyectoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.TipoProyectoDao;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Documento;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Estudiante;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.TipoProyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUploadService;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
+import com.bolsadeideas.spring.horario.datajpa.app.service.UploadFileDocum;
 
 @Secured("ROLE_ESTUDIANTE")
 @Controller
 @RequestMapping("/estudiante")
-@SessionAttributes(value = {"estudiante","propuesta","usuario"})
+@SessionAttributes(value = {"estudiante","propuesta","usuario","documento"})
 public class EstudianteController {
 	
 	@Autowired
@@ -55,7 +59,13 @@ public class EstudianteController {
 	
 	@Autowired
 	private ProyectoDao proyecto;
+	
+	@Autowired
+	@Qualifier("documentos")
+	private UploadFileDocum oploadDocu;
 
+	@Autowired 
+	private DocumentoDao documento;
 	
 	
 	
@@ -89,7 +99,71 @@ public class EstudianteController {
 		
 		return "estudiante/edit";
 	}
+
 	
+	@GetMapping("/see-documento")
+	public String verDocumentos(Principal principal, Model model) {
+		Usuario estudiante=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+		model.addAttribute("documentos", estudiante.getEstudiante().getProyectos().get(0).getDocumentos());
+		model.addAttribute("infop", "");
+		return "estudiante/documentos";
+	}
+	
+	@GetMapping("/add-documento")
+	public String mostrarFor(Principal principal,Model model) {
+		Usuario estudiante=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("estudiante", estudiante);
+		model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+		Documento documento=new Documento();
+		model.addAttribute("infoe", "");
+		model.addAttribute("documento", documento);
+		return "estudiante/subir-doc";
+	}
+	
+	@PostMapping("/save-documento")
+	public String guardarDocumento(@Valid Documento documento,BindingResult result,Principal principal,Model model,@RequestParam(name = "documento") MultipartFile archivo) {
+		Usuario estudiante=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("infoe", "");
+		if(result.hasErrors()) {
+			model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+			return "estudiante/subir-doc";
+		}
+		
+		if(archivo.isEmpty()) {
+			
+		}
+		String arch=archivo.getOriginalFilename();
+		int index=arch.lastIndexOf(".");
+		
+		if(index>0) {
+			arch=arch.substring(index+1);
+		}
+		
+		if(!arch.equalsIgnoreCase("pdf")) {
+		
+			model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+			model.addAttribute("document","el archivo debe ser en formato pdf");
+			return "estudiante/subir-doc";
+		}
+		
+		String uniqueFile=null;
+		try {
+			uniqueFile=this.oploadDocu.copy(archivo);
+			documento.setUrl(uniqueFile);
+		} catch (IOException e) {
+			
+			model.addAttribute("archivo", "el archivo no se pudo subir");
+			return "estudiante/subir-doc";
+			}
+		
+		documento.setProyecto(estudiante.getEstudiante().getProyectos().get(0));
+		this.documento.save(documento);
+		
+		
+		
+		return "redirect:/estudiante/see-documento";
+	}
 	
 	@PostMapping("/guardar-estudiante")
 	public String guardar(@RequestParam int semestre,@RequestParam double promedio,@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model) {
@@ -97,8 +171,10 @@ public class EstudianteController {
 		usuario.setRol("ROLE_ESTUDIANTE");
 		System.out.println("Entro al metodo");
 		if(result.hasErrors()) {
+			model.addAttribute("promedio", promedio);
+			model.addAttribute("semestre", semestre);
 			model.addAttribute("titulo", "Registro de estudiante");
-			return "register";
+			return "estudiante/edit";
 		}
 		
 	
@@ -119,7 +195,20 @@ public class EstudianteController {
 		return "redirect:/estudiante/info";
 	}
 	
-	
+	@GetMapping("/eliminar-documento/{id}")
+	public String eliminarDocumento(@PathVariable int id,Principal principal){
+		
+		
+		this.oploadDocu.delete(this.documento.findById(id).orElse(null).getUrl());
+		this.documento.deleteById(id);
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		if(user.getEstudiante().getProyectos().get(0).getDocumentos()==null || user.getEstudiante().getProyectos().get(0).getDocumentos().isEmpty()) {
+			System.out.println("no le queda mas");
+			return "redirect:/estudiante/add-documento";
+		}
+		System.out.println("si le queda mas");
+		return "redirect:/estudiante/see-documento";
+	}
 	
 	@GetMapping("/info")
 	public String verInformacion(Principal principal,Model model) {
@@ -212,9 +301,7 @@ public class EstudianteController {
 		
 		return "redirect:/estudiante/info-propuesta";
 	}
-		
-	
-	
+
 	
 	@PostMapping("/guardar")
 	public String guardarPropuesta(Principal principal,@Valid Proyecto propuesta,BindingResult result,@RequestParam int tipo,
@@ -293,7 +380,6 @@ public class EstudianteController {
 			return "redirect:/estudiante/subir";
 		}
 		Proyecto pro=estudiante.getEstudiante().getProyectos().get(0);
-		System.out.println(this.upload.getPath(pro.getDocumento()));
 		model.addAttribute("propuesta", pro);
 		model.addAttribute("infop","");
 		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
@@ -301,9 +387,34 @@ public class EstudianteController {
 		return "estudiante/info-propuesta";
 	}
 	
-	 @RequestMapping("/download/{filename}")
+	 @RequestMapping("/download-document/{filename}")
 	 @ResponseBody
 	 public void show(@PathVariable String filename, HttpServletResponse response) {
+		 
+		 response.setContentType("application/pdf");
+		 response.setHeader("Content-Transfer-Encoding", "quoted-printable");
+		 
+		 try {
+			 BufferedOutputStream bos= new BufferedOutputStream(response.getOutputStream());
+			 FileInputStream file =new FileInputStream(this.oploadDocu.getPath(filename).toString());
+			 byte [] buf=new byte[1024];
+			 int len;
+			 while((len=file.read(buf))>0) {
+				 bos.write(buf, 0, len);
+			 }
+			 
+			 bos.close();
+			 response.flushBuffer();
+			
+		} catch (Exception e) {
+			System.out.println("Ha ocurrido un error");
+			e.printStackTrace();
+		}
+	 }
+	
+	 @RequestMapping("/download/{filename}")
+	 @ResponseBody
+	 public void shows(@PathVariable String filename, HttpServletResponse response) {
 		 
 			 response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 		 
