@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
 
-@Secured("ROLE_ESTUDIANTE")
+@Secured("ROLE_ADMIN")
 @Controller
 @RequestMapping("/admin")
 @SessionAttributes("usuario")

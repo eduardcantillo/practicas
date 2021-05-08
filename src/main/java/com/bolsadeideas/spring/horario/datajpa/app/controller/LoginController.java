@@ -36,9 +36,13 @@ public class LoginController {
 		if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ESTUDIANTE"))) {
 			System.out.println(principal.getName());
 			return "redirect:/estudiante/subir";
+		}else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TUTOR"))){
+			return "redirect:/tutor";
 		}
+
+
 		System.out.println("No entró");
-		return "redirect:/redireccionar";
+		return "login";
 	}
 	
 	

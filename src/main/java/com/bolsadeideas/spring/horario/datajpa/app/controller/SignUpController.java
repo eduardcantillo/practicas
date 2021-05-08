@@ -5,6 +5,8 @@ package com.bolsadeideas.spring.horario.datajpa.app.controller;
 
 import javax.validation.Valid;
 
+import com.bolsadeideas.spring.horario.datajpa.app.dao.TutorDao;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -34,18 +36,66 @@ public class SignUpController {
 	
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+
+	@Autowired
+	private TutorDao tutorDao;
 	
 	@GetMapping("/student")
 	public String getSingUp(Model model) {
 		model.addAttribute("titulo", "Registro de estudiante");
 		Usuario usuario=new Usuario();
 		model.addAttribute("usuario",usuario);
+		model.addAttribute("estudiante","student");
+		model.addAttribute("url","student");
+
 		return "register";
 	}
-	
+	@GetMapping("/tutor")
+	public String getSingUpTutor(Model model){
+
+		model.addAttribute("titulo", "Registro de tutor");
+		Usuario usuario=new Usuario();
+		model.addAttribute("usuario",usuario);
+		model.addAttribute("url","tutor");
+		model.addAttribute("tutor","tutor");
+
+		return"register";
+	}
+
+	@PostMapping("/tutor")
+	public String guardarTutor(@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model){
+		if(result.hasErrors()){
+			model.addAttribute("titulo", "Registro de tutor");
+			model.addAttribute("url","tutor");
+			model.addAttribute("tutor","tutor");
+			return "register";
+		}
+		if(this.user.getUsuarioByEmail(usuario.getEmail())!=null || this.user.getUsuarioById(usuario.getCodigo())!= null) {
+			model.addAttribute("titulo", "Registro de tutor");
+			model.addAttribute("error", "error codigo o email ya utilizado");
+			model.addAttribute("tutor","tutor");
+			model.addAttribute("url","tutor");
+			return "register";
+		}
+
+		usuario.setHabilitado((byte) 1);
+		usuario.setRol("ROLE_TUTOR");
+		usuario.setPassword(this.encoder.encode(usuario.getPassword()));
+
+		Tutor tutor=new Tutor();
+		tutor.setIdTutor(usuario.getCodigo());
+		System.out.println("Guardo");
+		this.user.save(usuario);
+		this.tutorDao.save(tutor);
+
+		status.setComplete();
+		return "redirect:/login";
+	}
+
 	@PostMapping("/student")
 	public String guardar(@RequestParam int semestre,@RequestParam double promedio,@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model) {
-		
+		model.addAttribute("estudiante","student");
+		model.addAttribute("url","student");
 		
 		System.out.println("Entro al metodo");
 		if(result.hasErrors()) {
@@ -56,7 +106,7 @@ public class SignUpController {
 		
 		if(this.user.getUsuarioByEmail(usuario.getEmail())!=null || this.user.getUsuarioById(usuario.getCodigo())!= null) {
 			model.addAttribute("titulo", "Registro de estudiante");
-			model.addAttribute("error", "erro codigo o email ya utilizado");
+			model.addAttribute("error", "error codigo o email ya utilizado");
 			return "register";
 		}
 		
