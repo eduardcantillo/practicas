@@ -38,13 +38,13 @@
                                 
                                 <div class="form-group row">
                                     <div class="col-sm-6">
-                                    <label class="label text-dark" for="documento">Propuesta: </label>
+                                    <label class="label text-dark" >Propuesta: </label>
                                     <a class="btn btn-link" th:href="@{'/estudiante/download/'+${propuesta.documento}}">Descargar Documento </a>
                                    
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="label text-dark" for="tipo-proyecto">Tutor </label>
-                                    <input  type="text" readonly class="form-control" th:value="${(propuesta.diriges==null || propuesta.diriges.isEmpty()) ? 'No tiene tutor asignado': 'Pepito Perez'}" >
+                                    <label class="label text-dark" for="tutor">Tutor </label>
+                                    <input  type="text" id="tutor" readonly class="form-control" th:value="${(tutor == null) ? 'No tiene tutor asignado': tutor.usuario.nombres}" >
                                    
                                  </div> 
                                       
@@ -52,13 +52,13 @@
 
                                 <div class="form-group row">
                                     <div class="col-sm-6">
-                                        <label class="label text-dark" for="tipo-proyecto">Estado </label>
-                                        <input type="text" th:value="${propuesta.estado.nombre}" readonly class="form-control" id="documento" name="documento">
+                                        <label class="label text-dark" for="estado">Estado </label>
+                                        <input type="text" th:value="${propuesta.estado.nombre}" readonly class="form-control" id="estado" name="documento">
                                        
                                     </div>
                                     <div class="col-sm-6">
                                         <label class="label text-dark" for="tipo-proyecto">Tipo proyecto: </label>
-                                        <input type="text" th:value="${propuesta.tipoProyecto.name}" readonly class="form-control" id="documento" name="documento">
+                                        <input type="text" th:value="${propuesta.tipoProyecto.name}" readonly class="form-control" id="tipo-proyecto" name="documento">
                                      </div>
                                 </div>
 									<div class="form-group text-center text-dark" th:if="${propuesta.tipoProyecto.documentos==0}">Este proyecto no contiene documentos externos</div>

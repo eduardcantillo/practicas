@@ -9,6 +9,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.bolsadeideas.spring.horario.datajpa.app.dao.*;
+import com.bolsadeideas.spring.horario.datajpa.app.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
@@ -26,15 +28,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.bolsadeideas.spring.horario.datajpa.app.dao.DocumentoDao;
-import com.bolsadeideas.spring.horario.datajpa.app.dao.EstadoDao;
-import com.bolsadeideas.spring.horario.datajpa.app.dao.ProyectoDao;
-import com.bolsadeideas.spring.horario.datajpa.app.dao.TipoProyectoDao;
-import com.bolsadeideas.spring.horario.datajpa.app.models.Documento;
-import com.bolsadeideas.spring.horario.datajpa.app.models.Estudiante;
-import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
-import com.bolsadeideas.spring.horario.datajpa.app.models.TipoProyecto;
-import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUploadService;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
 import com.bolsadeideas.spring.horario.datajpa.app.service.UploadFileDocum;
@@ -64,6 +57,8 @@ public class EstudianteController {
 	@Qualifier("documentos")
 	private UploadFileDocum oploadDocu;
 
+	@Autowired
+	private DirigeDao dirigeDao;
 	@Autowired 
 	private DocumentoDao documento;
 	
@@ -380,7 +375,11 @@ public class EstudianteController {
 			return "redirect:/estudiante/subir";
 		}
 		Proyecto pro=estudiante.getEstudiante().getProyectos().get(0);
+		System.out.println("Entro al metodo");
+		Tutor tut=this.dirigeDao.getByPropuesta(pro.getIdProyecto()).getTutor();
+		System.out.println("Entro al metodo");
 		model.addAttribute("propuesta", pro);
+		model.addAttribute("tutor",tut);
 		model.addAttribute("infop","");
 		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
 		model.addAttribute("titulo", "Informacion de la propuesta");

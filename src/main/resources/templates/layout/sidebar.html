@@ -30,6 +30,25 @@
                    <span> <i class="fas fa-user-edit"></i>
                     Editar Informacion personal</span></a>
             </li>
+     <li sec:authorize="hasRole('ROLE_TUTOR')" th:class="${ (proyectos!=null)? 'nav-item active': 'nav-item'}">
+         <a class="nav-link" th:href="@{/tutor/proyectos}">
+                   <span> <i class="fas fa-user-edit"></i>
+                       Mis proyectos </span></a>
+     </li>
+
+     <li sec:authorize="hasRole('ROLE_TUTOR')" th:class="${ (info!=null)? 'nav-item active': 'nav-item'}">
+         <a class="nav-link" th:href="@{/tutor/edit}">
+                   <span> <i class="fas fa-user-edit"></i>
+                    Editar Informacion personal</span></a>
+     </li>
+
+     <li sec:authorize="hasRole('ROLE_TUTOR')" th:class="${ (personal!=null)? 'nav-item active': 'nav-item'}">
+         <a class="nav-link" th:href="@{/tutor/info}">
+                   <span> <i class="fas fa-user-edit"></i>
+                       Informacion personal</span></a>
+     </li>
+
+
             
              <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infop!=null)? 'nav-item active': 'nav-item'}">
                 <a class="nav-link" th:href="@{/estudiante/info-propuesta}">
@@ -66,12 +85,12 @@
             </li>
             
              <li sec:authorize="hasRole('ROLE_ADMIN')" th:if="${profesor==null}" class="nav-item ">
-                <a class="nav-link collapsed " href="#" data-toggle="collapse" data-target="#collapseTwo"
+                <a class="nav-link collapsed " href="#" data-toggle="collapse" data-target="#collapse3"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-user"></i>
                     <span>Profesores</span>
                 </a>
-                <div id="collapseTwo" class="collapse " aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapse3" class="collapse " aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado de profesores:</h6>
                         <a class="collapse-item" th:href="@{'/profesoresActivos'}"> <i class="fas fa-lock-open"></i> <span>Activos</span> </a>
