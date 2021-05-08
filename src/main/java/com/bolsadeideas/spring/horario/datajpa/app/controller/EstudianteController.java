@@ -52,7 +52,7 @@ public class EstudianteController {
 	
 	@Autowired
 	private ProyectoDao proyecto;
-	
+
 	@Autowired
 	@Qualifier("documentos")
 	private UploadFileDocum oploadDocu;
@@ -376,10 +376,17 @@ public class EstudianteController {
 		}
 		Proyecto pro=estudiante.getEstudiante().getProyectos().get(0);
 		System.out.println("Entro al metodo");
-		Tutor tut=this.dirigeDao.getByPropuesta(pro.getIdProyecto()).getTutor();
+
+		try{
+			Tutor tut=this.dirigeDao.getByPropuesta(pro.getIdProyecto()).getTutor();
+			model.addAttribute("tutor",tut);
+		}catch (Exception e){
+			model.addAttribute("tutor",null);
+		}
+
 		System.out.println("Entro al metodo");
 		model.addAttribute("propuesta", pro);
-		model.addAttribute("tutor",tut);
+
 		model.addAttribute("infop","");
 		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
 		model.addAttribute("titulo", "Informacion de la propuesta");

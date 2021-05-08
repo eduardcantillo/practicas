@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head">
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+       <ul th:replace="layout/sidebar :: sidebar"></ul>
+
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav th:replace="layout/topbar :: topbar">
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    
+                    <h1 class="h3 mb-2 text-gray-800"><strong>Mis proyectos</strong></h1>
+                    <p class="mb-4 text-dark">Listado de los proyectos en los que me encuentro como tutor.</p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger">Listado de mis proyectos asiganados</h6>
+                        </div>
+                        <div  class="card-body">
+                            <div th:if="${propuestas==null || propuestas.isEmpty()}" class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Aun no se encuentra con proyectos asignados</h6>
+                            </div>
+                            <div th:if="${propuestas!=null && not propuestas.isEmpty()}" class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" >
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Integrantes</th>
+                                            <th>Estado</th>
+                                             <th>Tipo Proyecto</th>
+                                             <th>Requiere Documentos</th>
+                                            <th> ver documento</th>
+                                            <th>Calificadores</th>
+                                            
+                                        </tr>
+                                        
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr th:each="proyec :${propuestas}">
+                                            <td th:text="${proyec.idProyecto}"></td>
+                                            <td th:text="${proyec.estudiante.usuario.nombres}"></td>
+                                            <td th:text="${proyec.estado.nombre}"></td>
+                                            <td th:text="${proyec.tipoProyecto.name}"></td>
+                                            <td th:text="${(proyec.tipoProyecto.documentos == 1)? 'Si' : 'No'}"></td>
+                                            <th> <a  th:href="@{'/tutor/ver-propuesta/'+${proyec.documento}}">Descargar propuesta</a> </th>
+                                            <td><a > ver calificadores</a></td>
+                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+           
+
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+	<div th:replace="layout/import-js :: import-js"></div>
+
+
+</body>
+
+</html>

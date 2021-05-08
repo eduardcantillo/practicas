@@ -30,7 +30,7 @@
                    <span> <i class="fas fa-user-edit"></i>
                     Editar Informacion personal</span></a>
             </li>
-     <li sec:authorize="hasRole('ROLE_TUTOR')" th:class="${ (proyectos!=null)? 'nav-item active': 'nav-item'}">
+     <li sec:authorize="hasRole('ROLE_TUTOR')" th:class="${ (propuestas!=null)? 'nav-item active': 'nav-item'}">
          <a class="nav-link" th:href="@{/tutor/proyectos}">
                    <span> <i class="fas fa-user-edit"></i>
                        Mis proyectos </span></a>
