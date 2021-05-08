@@ -29,9 +29,10 @@ public class LoginController {
 	return "redirect:/";
 	}
 	
-	@GetMapping("/")
+	@GetMapping({"/",""})
 	public String redireccionar(Principal principal,Authentication auth) {
-		
+		if(auth==null) return "login";
+
 		if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ESTUDIANTE"))) {
 			System.out.println(principal.getName());
 			return "redirect:/estudiante/subir";

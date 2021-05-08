@@ -47,8 +47,8 @@
                                    
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="label text-dark" for="tipo-proyecto">Tipo proyecto: </label>
-                                    <select class="form-control" name="tipo">
+                                    <label class="label text-dark" for="tipo">Tipo proyecto: </label>
+                                    <select class="form-control" name="tipo" id="tipo">
                                         <option value=-1 selected>Selecciones el tipo</option>
                                         <option th:each="tipe: ${tipes}" th:value="${tipe.idTipoProyecto}" th:text="${tipe.name}">One</option>
                                         
