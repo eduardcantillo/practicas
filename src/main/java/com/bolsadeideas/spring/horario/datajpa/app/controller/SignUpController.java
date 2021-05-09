@@ -5,7 +5,9 @@ package com.bolsadeideas.spring.horario.datajpa.app.controller;
 
 import javax.validation.Valid;
 
+import com.bolsadeideas.spring.horario.datajpa.app.dao.EvaluadorDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.TutorDao;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Evaluador;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,48 +35,52 @@ public class SignUpController {
 
 	@Autowired
 	private IUsuarioService user;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 
 	@Autowired
 	private TutorDao tutorDao;
-	
+
+	@Autowired
+	private EvaluadorDao evaluadorDao;
+
 	@GetMapping("/student")
 	public String getSingUp(Model model) {
 		model.addAttribute("titulo", "Registro de estudiante");
-		Usuario usuario=new Usuario();
-		model.addAttribute("usuario",usuario);
-		model.addAttribute("estudiante","student");
-		model.addAttribute("url","student");
+		Usuario usuario = new Usuario();
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("estudiante", "student");
+		model.addAttribute("url", "student");
 
 		return "register";
 	}
+
 	@GetMapping("/tutor")
-	public String getSingUpTutor(Model model){
+	public String getSingUpTutor(Model model) {
 
 		model.addAttribute("titulo", "Registro de tutor");
-		Usuario usuario=new Usuario();
-		model.addAttribute("usuario",usuario);
-		model.addAttribute("url","tutor");
-		model.addAttribute("tutor","tutor");
+		Usuario usuario = new Usuario();
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("url", "tutor");
+		model.addAttribute("tutor", "tutor");
 
-		return"register";
+		return "register";
 	}
 
 	@PostMapping("/tutor")
-	public String guardarTutor(@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model){
-		if(result.hasErrors()){
+	public String guardarTutor(@Valid Usuario usuario, BindingResult result, SessionStatus status, Model model) {
+		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Registro de tutor");
-			model.addAttribute("url","tutor");
-			model.addAttribute("tutor","tutor");
+			model.addAttribute("url", "tutor");
+			model.addAttribute("tutor", "tutor");
 			return "register";
 		}
-		if(this.user.getUsuarioByEmail(usuario.getEmail())!=null || this.user.getUsuarioById(usuario.getCodigo())!= null) {
+		if (this.user.getUsuarioByEmail(usuario.getEmail()) != null || this.user.getUsuarioById(usuario.getCodigo()) != null) {
 			model.addAttribute("titulo", "Registro de tutor");
 			model.addAttribute("error", "error codigo o email ya utilizado");
-			model.addAttribute("tutor","tutor");
-			model.addAttribute("url","tutor");
+			model.addAttribute("tutor", "tutor");
+			model.addAttribute("url", "tutor");
 			return "register";
 		}
 
@@ -82,11 +88,50 @@ public class SignUpController {
 		usuario.setRol("ROLE_TUTOR");
 		usuario.setPassword(this.encoder.encode(usuario.getPassword()));
 
-		Tutor tutor=new Tutor();
+		Tutor tutor = new Tutor();
 		tutor.setIdTutor(usuario.getCodigo());
 		System.out.println("Guardo");
 		this.user.save(usuario);
 		this.tutorDao.save(tutor);
+
+		status.setComplete();
+		return "redirect:/login";
+	}
+
+	@GetMapping("/calificador")
+	public String calificador(Model model){
+		model.addAttribute("url","calificador");
+		model.addAttribute("calificador","");
+		Usuario usuario = new Usuario();
+		model.addAttribute("usuario", usuario);
+		return "register";
+	}
+
+	@PostMapping("/calificador")
+	public String guardarCalificador(@Valid Usuario usuario, BindingResult result, SessionStatus status, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("titulo", "Registro de calificador");
+			model.addAttribute("url", "calificador");
+			model.addAttribute("calificador", "tutor");
+			return "register";
+		}
+		if (this.user.getUsuarioByEmail(usuario.getEmail()) != null || this.user.getUsuarioById(usuario.getCodigo()) != null) {
+			model.addAttribute("titulo", "Registro de calificador");
+			model.addAttribute("error", "error codigo o email ya utilizado");
+			model.addAttribute("calificador", "tutor");
+			model.addAttribute("url", "calificador");
+			return "register";
+		}
+
+		usuario.setHabilitado((byte) 1);
+		usuario.setRol("ROLE_CALIFICADOR");
+		usuario.setPassword(this.encoder.encode(usuario.getPassword()));
+
+		Evaluador evaluador = new Evaluador();
+		evaluador.setIdEvaluador(usuario.getCodigo());
+		System.out.println("Guardo");
+		this.user.save(usuario);
+		this.evaluadorDao.save(evaluador);
 
 		status.setComplete();
 		return "redirect:/login";
