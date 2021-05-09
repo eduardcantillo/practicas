@@ -19,6 +19,10 @@ public class Evaluador implements Serializable {
 	@Column(name="id_evaluador")
 	private String idEvaluador;
 
+	//bi-directional many-to-one association to Calificado
+	@OneToMany(mappedBy="evaluador")
+	private List<Calificado> calificados;
+
 	//bi-directional many-to-one association to Asiganado
 	@OneToMany(mappedBy="evaluador")
 	private List<Asiganado> asiganados;
@@ -29,6 +33,26 @@ public class Evaluador implements Serializable {
 	private Usuario usuario;
 
 	public Evaluador() {
+	}
+
+	public List<Calificado> getCalificados() {
+		return this.calificados;
+	}
+
+	public void setCalificados(List<Calificado> calificados) {
+		this.calificados = calificados;
+	}
+	public Calificado addCalificado(Calificado calificado) {
+		getCalificados().add(calificado);
+		calificado.setTutor(this);
+		return calificado;
+	}
+
+	public Calificado removeCalificado(Calificado calificado) {
+		getCalificados().remove(calificado);
+		calificado.setTutor(null);
+
+		return calificado;
 	}
 
 	public String getIdEvaluador() {

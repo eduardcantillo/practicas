@@ -19,10 +19,6 @@ public class Tutor implements Serializable {
 	@Column(name="id_tutor")
 	private String idTutor;
 
-	//bi-directional many-to-one association to Calificado
-	@OneToMany(mappedBy="tutor")
-	private List<Calificado> calificados;
-
 	//bi-directional many-to-one association to Dirige
 	@OneToMany(mappedBy="tutor")
 	private List<Dirige> diriges;
@@ -43,27 +39,6 @@ public class Tutor implements Serializable {
 		this.idTutor = idTutor;
 	}
 
-	public List<Calificado> getCalificados() {
-		return this.calificados;
-	}
-
-	public void setCalificados(List<Calificado> calificados) {
-		this.calificados = calificados;
-	}
-
-	public Calificado addCalificado(Calificado calificado) {
-		getCalificados().add(calificado);
-		calificado.setTutor(this);
-
-		return calificado;
-	}
-
-	public Calificado removeCalificado(Calificado calificado) {
-		getCalificados().remove(calificado);
-		calificado.setTutor(null);
-
-		return calificado;
-	}
 
 	public List<Dirige> getDiriges() {
 		return this.diriges;

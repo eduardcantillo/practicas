@@ -48,6 +48,13 @@
                        Informacion personal</span></a>
      </li>
 
+     <li sec:authorize="hasRole('ROLE_EVALUADOR')" th:class="${ (infoe!=null)? 'nav-item active': 'nav-item'}">
+         <a class="nav-link" th:href="@{/evaluador/}">
+                   <span> <i class="fas fa-user-edit"></i>
+                       Informacion personal</span></a>
+     </li>
+
+
 
             
              <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infop!=null)? 'nav-item active': 'nav-item'}">

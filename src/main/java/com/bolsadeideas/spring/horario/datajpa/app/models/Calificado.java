@@ -34,8 +34,8 @@ public class Calificado implements Serializable {
 
 	//bi-directional many-to-one association to Tutor
 	@ManyToOne
-	@JoinColumn(name="id_tutor")
-	private Tutor tutor;
+	@JoinColumn(name="id_evaluador")
+	private Evaluador evaluador;
 
 	public Calificado() {
 	}
@@ -80,12 +80,12 @@ public class Calificado implements Serializable {
 		this.proyecto = proyecto;
 	}
 
-	public Tutor getTutor() {
-		return this.tutor;
+	public Evaluador getEvaluador() {
+		return this.evaluador;
 	}
 
-	public void setTutor(Tutor tutor) {
-		this.tutor = tutor;
+	public void setTutor(Evaluador evaluador) {
+		this.evaluador = evaluador;
 	}
 
 }

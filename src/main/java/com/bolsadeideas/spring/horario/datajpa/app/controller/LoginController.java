@@ -38,6 +38,8 @@ public class LoginController {
 			return "redirect:/estudiante/subir";
 		}else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TUTOR"))){
 			return "redirect:/tutor";
+		}else if(auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EVALUADOR"))){
+			return "redirect:/evaluador";
 		}
 
 
