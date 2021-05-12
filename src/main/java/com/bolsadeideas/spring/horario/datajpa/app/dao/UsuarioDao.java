@@ -8,6 +8,6 @@ public interface UsuarioDao extends CrudRepository<Usuario, String> {
 
 	@Query("select c from Usuario c  where c.email=?1")
 	public Usuario getByEmail(String email);
-	
 
+	public Usuario findByTokenPassword(String token);
 }

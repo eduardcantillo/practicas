@@ -46,6 +46,9 @@ public class Usuario implements Serializable {
 	@NotBlank(message = "el campo telefono no debe ser vacio")
 	private String telefono;
 
+	@Column(name = "token_password")
+	private String tokenPassword;
+
 	//bi-directional one-to-one association to Estudiante
 	@OneToOne(mappedBy="usuario")
 	private Estudiante estudiante;
@@ -156,5 +159,9 @@ public class Usuario implements Serializable {
 	public void setTutor(Tutor tutor) {
 		this.tutor = tutor;
 	}
+
+	public String getTokenPassword(){ return this.tokenPassword;}
+
+	public void setTokenPassword(String tokenPassword){ this.tokenPassword=tokenPassword; }
 
 }
