@@ -25,17 +25,17 @@
                                 <h1 th:if="${infop==null}" class="h4 text-gray-900 mb-4">Sube tu propuesta</h1>
                                 <h1 th:if="${infop!=null}" class="h4 text-gray-900 mb-4">Usted aun no tiene ningun proyecto registrado por favor registre uno</h1>
                             </div>
-                            <form class="user" method="post" th:action="@{/estudiante/guardar}" th:object="${propuesta}" enctype="multipart/form-data">
+                            <form class="user" method="post" th:action="@{/estudiante/guardar}" th:object="${proyecto}" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label class="label text-dark" for="titulo">Titulo: </label>
-                                    <input type="text" class="form-control text-dark" id="titulo"
+                                    <input type="text" class="form-control text-dark" id="titulo" name="titulo"
                                         placeholder="titulo" th:field="*{titulo}">
-                                        <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                                    <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="label text-dark" for="descripcion">Descripcion: </label>
-                                    <textarea placeholder="Descripcion de la propuesta" th:field="*{decripcion}" class="form-control  text-dark" id="descripcion" cols="34" rows="8"></textarea>
+                                    <label class="label text-dark" for="descripcion">Objetivo General: </label>
+                                    <textarea placeholder="Descripcion de la propuesta" th:field="*{decripcion}" class="form-control  text-dark" id="descripcion" cols="34" rows="6"></textarea>
                                   <div class="text-danger" th:if="${#fields.hasErrors('decripcion')}" th:errors="*{decripcion}"></div>
                                 </div>
                                 
@@ -44,24 +44,57 @@
                                     <label class="label text-dark" for="documento">Propuesta: </label>
                                     <input type="file" class="form-control" id="documento" name="archivo">
                                       <div class="text-danger" th:if="${archivo!=null}" th:text="${archivo}"></div>
-                                   
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" for="duracion">duracion: </label>
+                                        <input type="number" class="form-control"  th:field="*{duracion}" id="duracion" name="archivo" min="6">
+                                        <div class="text-danger" th:if="${#fields.hasErrors('duracion')}" th:errors="*{duracion}"></div>
+
+                                    </div>
                                 </div>
+
+                                <div class="form-group row">
+
                                 <div class="col-sm-6">
-                                    <label class="label text-dark" for="tipo-proyecto">Tipo proyecto: </label>
-                                    <select class="form-control" name="tipo">
+                                    <label class="label text-dark" for="tipo">Tipo proyecto: </label>
+                                    <select class="form-control" name="tipo" id="tipo">
                                         <option value=-1 selected>Selecciones el tipo</option>
                                         <option th:each="tipe: ${tipes}" th:value="${tipe.idTipoProyecto}" th:text="${tipe.name}">One</option>
                                         
                                       </select>
                                        <div class="text-danger" th:if="${tipo!=null}" th:text="${tipo}"></div>
-                                 </div> 
-                                 
-                                 
-                                      
+                                 </div>
+
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" >Elige una opcion </label>
+                                        <select class="form-control" name="primera" id="primera">
+                                            <option value=1 selected>Primera Vez</option>
+                                            <option value=2 selected>Correccion</option>
+                                        </select>
+                                        </div>
+                                        </div>
+
+
+
+
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" for="director">director: </label>
+                                        <input type="text" class="form-control" id="Director" name="director" placeholder="codigo del director">
+                                        <div class="text-danger" th:if="${director!=null}" th:text="${director}"></div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <label class="label text-dark" for="Codirector">codirector: </label>
+                                        <input type="text" class="form-control" id="codirector" name="Codirector" placeholder="codigo del codirector">
+
+
+                                    </div>
                                 </div>
 
-                                
-                            
                                 <input type="submit" class="btn btn-danger btn-user btn-block" value="Subir propuesta">
                                   
                                 

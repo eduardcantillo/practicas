@@ -2,6 +2,8 @@ package com.bolsadeideas.spring.horario.datajpa.app.models;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 
@@ -20,18 +22,26 @@ public class Proyecto implements Serializable {
 	@Column(name="id_proyecto")
 	private int idProyecto;
 
+	@NotBlank(message = "Debe dar una descripcion para el proyecto")
 	private String decripcion;
 
 	private String documento;
 
+	private int cantidad;
+
+	@NotBlank(message = "El titulo no puede estar en blanco")
 	private String titulo;
 
+	@Min(value = 6,message = "la cantidad minima de meses debe ser 6")
+	private int duracion;
+
+	private boolean correccion;
 	//bi-directional many-to-one association to Asiganado
 	@OneToMany(mappedBy="proyecto")
 	private List<Asiganado> asiganados;
 
 	//bi-directional many-to-one association to Calificado
-	@OneToMany(mappedBy="proyecto")
+	@OneToMany(mappedBy="proyecto",cascade = CascadeType.ALL)
 	private List<Calificado> calificados;
 
 	//bi-directional many-to-one association to Dirige
@@ -58,6 +68,30 @@ public class Proyecto implements Serializable {
 	private TipoProyecto tipoProyecto;
 
 	public Proyecto() {
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
+	}
+
+	public int getDuracion() {
+		return duracion;
+	}
+
+	public void setDuracion(int duracion) {
+		this.duracion = duracion;
+	}
+
+	public boolean isCorreccion() {
+		return correccion;
+	}
+
+	public void setCorreccion(boolean correccion) {
+		this.correccion = correccion;
 	}
 
 	public int getIdProyecto() {

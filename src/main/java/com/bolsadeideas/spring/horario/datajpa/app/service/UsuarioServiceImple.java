@@ -8,6 +8,9 @@ import com.bolsadeideas.spring.horario.datajpa.app.dao.IEstudianteDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.UsuarioDao;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Estudiante;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
+
+import java.util.List;
+
 @Service
 public class UsuarioServiceImple implements IUsuarioService {
 
@@ -44,6 +47,12 @@ public class UsuarioServiceImple implements IUsuarioService {
 	public Usuario getUsuarioByEmail(String email) {
 		return this.user.getByEmail(email);
 	}
+
+	@Override
+	public List<Usuario> getTutores(byte habilitado) {
+		return this.user.getTutoreHabilitados(habilitado);
+	}
+
 	@Override
 	public Usuario getUsuarioById(String id) {
 		return this.user.findById(id).orElse(null);

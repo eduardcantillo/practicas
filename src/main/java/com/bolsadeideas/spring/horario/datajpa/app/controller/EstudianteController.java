@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,7 @@ import com.bolsadeideas.spring.horario.datajpa.app.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +37,7 @@ import com.bolsadeideas.spring.horario.datajpa.app.service.UploadFileDocum;
 @Secured("ROLE_ESTUDIANTE")
 @Controller
 @RequestMapping("/estudiante")
-@SessionAttributes(value = {"estudiante","propuesta","usuario","documento"})
+@SessionAttributes(value = {"estudiante","proyecto","usuario","documento"})
 public class EstudianteController {
 	
 	@Autowired
@@ -43,10 +45,15 @@ public class EstudianteController {
 	@Autowired
 	private TipoProyectoDao tipe;
 
-	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+
 	@Autowired
 	private EstadoDao estado;
-	
+
+	@Autowired
+	private IEstudianteDao estudiante;
+
 	@Autowired
 	private IUploadService upload;
 	
@@ -58,6 +65,9 @@ public class EstudianteController {
 	private UploadFileDocum oploadDocu;
 
 	@Autowired
+	private TutorDao tutor;
+
+	@Autowired
 	private DirigeDao dirigeDao;
 	@Autowired 
 	private DocumentoDao documento;
@@ -67,13 +77,14 @@ public class EstudianteController {
 	@GetMapping("/subir")
 	public String index(Principal principal,Model model) {
 		Usuario estudiante=this.user.getUsuarioById(principal.getName());
+		Proyecto pro=this.proyecto.findById(estudiante.getEstudiante().getProyecto()).orElse(null);
 		
-		if(estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()) {
+		if((estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()) && pro==null) {
 			System.out.println(estudiante);
-			Proyecto propuesta =new Proyecto();
+			Proyecto proyecto =new Proyecto();
 			model.addAttribute("titulo", "subir propuesta");
 			model.addAttribute("estudiante", estudiante);
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("proyecto", proyecto);
 			model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			return "estudiante/subirPropuesta";
@@ -159,33 +170,77 @@ public class EstudianteController {
 		
 		return "redirect:/estudiante/see-documento";
 	}
-	
-	@PostMapping("/guardar-estudiante")
-	public String guardar(@RequestParam int semestre,@RequestParam double promedio,@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model) {
-		
-		usuario.setRol("ROLE_ESTUDIANTE");
-		System.out.println("Entro al metodo");
-		if(result.hasErrors()) {
-			model.addAttribute("promedio", promedio);
-			model.addAttribute("semestre", semestre);
-			model.addAttribute("titulo", "Registro de estudiante");
-			return "estudiante/edit";
+
+	@GetMapping("/agregar-compañero")
+	public String addCompañero(Model model,Principal principal){
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		Proyecto proyecto1 = this.proyecto.findById(user.getEstudiante().getProyecto()).orElse(null);
+
+		if((user.getEstudiante().getProyectos()==null || user.getEstudiante().getProyectos().isEmpty()) && proyecto1==null ){
+			return "redirect:/estudiante/subir";
 		}
-		
-	
+		if(proyecto1==null){
+			proyecto1=user.getEstudiante().getProyectos().get(0);
+		}
+
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+
+		if(proyecto1.getCantidad()>0) {
+			Usuario usuario=new Usuario();
+			model.addAttribute("usuario",usuario);
+			model.addAttribute("estudiante","");
+		}
+
+
+
+		return "estudiante/registrar";
+	}
+
+	@PostMapping("/agregar-compañero")
+	public String guardar(@RequestParam int semestre,@RequestParam double promedio,@Valid Usuario usuario,BindingResult result,SessionStatus status,Model model,Principal principal) {
+
+		Proyecto p=this.proyecto.findByestudiante(principal.getName());
+
+		if(p==null){
+			Estudiante est=this.estudiante.findById(principal.getName()).orElse(null);
+			p=this.proyecto.findById(est.getProyecto()).orElse(null);
+			System.out.println("No funciono la couslta");
+		}
+
+		System.out.println(p.getTitulo());
+
+		model.addAttribute("estudiante","");
+		if(result.hasErrors()) {
+			model.addAttribute("titulo", "Registro de estudiante");
+			return "estudiante/registrar";
+		}
+
+
+		if(this.user.getUsuarioByEmail(usuario.getEmail())!=null || this.user.getUsuarioById(usuario.getCodigo())!= null) {
+			model.addAttribute("titulo", "Registro de estudiante");
+			model.addAttribute("error", "error codigo o email ya utilizado");
+			return "estudiante/registrar";
+		}
+
+
 		System.out.println(semestre+ " "+ promedio);
+		usuario.setPassword(encoder.encode(usuario.getPassword()));
 		usuario.setHabilitado((byte)1);
 		usuario.setRol("ROLE_ESTUDIANTE");
-		
+
 		System.out.println(usuario.getEmail());
 		Estudiante es=new Estudiante();
-		
+
 		es.setPromedio(promedio);
 		es.setSemestre(""+semestre);
 		es.setIdEstudiantes(usuario.getCodigo());
+		es.setProyecto(p.getIdProyecto());
+		p.setCantidad(p.getCantidad()-1);
+
 		this.user.save(usuario);
 		this.user.saveEstudent(es);
-		
+		this.proyecto.save(p);
+
 		status.setComplete();
 		return "redirect:/estudiante/info";
 	}
@@ -213,117 +268,135 @@ public class EstudianteController {
 		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
 		return "estudiante/info-estudiante";
 	}
-	
+
 	@GetMapping("/editar-propuesta")
 	public String editarPropuesta(Principal principal,Model model,RedirectAttributes flash) {
 		Usuario estudiante=this.user.getUsuarioById(principal.getName());
-		if(estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()) {
+		Proyecto proyecto1 = this.proyecto.findById(estudiante.getEstudiante().getProyecto()).orElse(null);
+
+		boolean proyecto=proyecto1==null;
+		if((estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()) && proyecto1==null ) {
 			flash.addFlashAttribute("infop","");
 			return "redirect:/estudiante/subir";
 		}
+
 		model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 		model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
 		model.addAttribute("infoe", "");
-		model.addAttribute("propuesta",estudiante.getEstudiante().getProyectos().get(0));
+
+		if (proyecto) {
+			proyecto1=estudiante.getEstudiante().getProyectos().get(0);
+		}
+		model.addAttribute("documento",proyecto1.getDocumento());
+		model.addAttribute("estudiante",proyecto1.getEstudiante().getIdEstudiantes());
+		model.addAttribute("propuesta",proyecto1);
 		return "estudiante/editar-propuesta";
+
+
+
 	}
 	
 	@PostMapping("/guardar-edicion")
-	public String guardarEdicion(Principal principal,@Valid Proyecto propuesta,BindingResult result,@RequestParam int tipo,
-			Model model,@RequestParam(name = "archivo") MultipartFile archivo,SessionStatus status) {
-		
-		
-		Usuario estudiante=this.user.getUsuarioById(principal.getName());
-		
-		
+	public String guardarEdicion(@Valid Proyecto proyecto,BindingResult result,@RequestParam int tipo,
+			Model model,@RequestParam(name = "archivo") MultipartFile archivo,SessionStatus status,@RequestParam String estudiante) {
+
+		System.out.println(proyecto.getIdProyecto());
 		if(result.hasErrors()) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("propuesta", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
-			
+			result.getFieldErrors().forEach(fieldError -> {
+				System.out.println(fieldError.getField()+": "+fieldError.getDefaultMessage());
+			});
 			return "estudiante/editar-propuesta";
 		}
 		
 		TipoProyecto tipoProyecto=tipe.findById(tipo).orElse(null);
 		
 		if(tipo==-1 || tipoProyecto==null) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("propuesta", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			model.addAttribute("tipo", "Tipo no seleccionado o no valido");
+			System.out.println("erro en el tipo de proyecto");
 			return "estudiante/editar-propuesta";
 		}
 		
 		if (!archivo.isEmpty()) {
-			
-		}
-		String arch=archivo.getOriginalFilename();
-		int index=arch.lastIndexOf(".");
+			String arch=archivo.getOriginalFilename();
+			int index=arch.lastIndexOf(".");
+
+
 		
 		if(index>0) {
 			arch=arch.substring(index+1);
-			
-		
-		
+
 		if(!arch.equalsIgnoreCase("docx") && !arch.equalsIgnoreCase("doc")) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("propuesta", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			model.addAttribute("archivo", "El archivo debe ser un formato .DOCX o .DOC");
+			System.out.println("error en el formato del archivo");
 			return "estudiante/subirPropuesta";
 		}
-			
-			
-			
-			
+
+
 			String uniqueFile=null;
 			try {
-				this.upload.delete(propuesta.getDocumento());
+				this.upload.delete(proyecto.getDocumento());
 				uniqueFile=this.upload.copy(archivo);
-				propuesta.setDocumento(uniqueFile);
+				proyecto.setDocumento(uniqueFile);
 			} catch (IOException e) {
-				model.addAttribute("propuesta", propuesta);
+				model.addAttribute("propuesta", proyecto);
 				model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 				model.addAttribute("archivo", "el archivo no se pudo subir");
+				System.out.println("erro al subir el archivo");
 				return "estudiante/subirPropuesta";
+
 			}
 			
 		}
+		}
+		Estudiante est=this.estudiante.findById(estudiante).orElse(null);
 		
-		propuesta.setEstado(this.estado.findById(1).orElse(null));
-		propuesta.setTipoProyecto(tipoProyecto);
-		propuesta.setEstudiante(estudiante.getEstudiante());
-			this.proyecto.save(propuesta);
+		proyecto.setEstado(this.estado.findById(1).orElse(null));
+		proyecto.setTipoProyecto(tipoProyecto);
+		proyecto.setCorreccion(true);
+		proyecto.setEstudiante(est);
+		System.out.println("completo");
+		this.proyecto.save(proyecto);
 			status.setComplete();
-		
-		
+
 		return "redirect:/estudiante/info-propuesta";
 	}
 
+
 	
 	@PostMapping("/guardar")
-	public String guardarPropuesta(Principal principal,@Valid Proyecto propuesta,BindingResult result,@RequestParam int tipo,
-			Model model,@RequestParam(name = "archivo") MultipartFile archivo,SessionStatus status) {
-		
-		
+	public String guardarPropuesta(Principal principal,@Valid Proyecto proyecto,BindingResult result,@RequestParam int tipo,
+			Model model,@RequestParam String director,@RequestParam int primera,@RequestParam(name = "archivo") MultipartFile archivo,SessionStatus status) {
+
 		Usuario estudiante=this.user.getUsuarioById(principal.getName());
-		
-		
+		model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+
 		if(result.hasErrors()) {
-			model.addAttribute("propuesta", propuesta);
+			System.out.println("Entro a la parte de la validacion");
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
-			
 			return "estudiante/subirPropuesta";
 		}
-		
+
+		if(primera!= 1){ proyecto.setCorreccion(true);}
+		else proyecto.setCorreccion(false);
+
+
 		TipoProyecto tipoProyecto=tipe.findById(tipo).orElse(null);
 		
 		if(tipo==-1 || tipoProyecto==null) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("proyecto", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			model.addAttribute("tipo", "Tipo no seleccionado o no valido");
 			return "estudiante/subirPropuesta";
 		}
 		
 		if (archivo.isEmpty()) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("proyecto", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			model.addAttribute("archivo", "Archivo no seleccionado");
 			return "estudiante/subirPropuesta";
@@ -337,30 +410,54 @@ public class EstudianteController {
 		}
 		
 		if(!arch.equalsIgnoreCase("docx") && !arch.equalsIgnoreCase("doc")) {
-			model.addAttribute("propuesta", propuesta);
+			model.addAttribute("proyecto", proyecto);
 			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 			model.addAttribute("archivo", "El archivo debe ser un formato .DOCX o .DOC");
 			return "estudiante/subirPropuesta";
 		}
-		
-			propuesta.setEstado(this.estado.findById(1).orElse(null));
-			propuesta.setTipoProyecto(tipoProyecto);
-			propuesta.setEstudiante(estudiante.getEstudiante());
-			
+
+		if(director.isBlank()){
+			model.addAttribute("proyecto", proyecto);
+			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
+			model.addAttribute("director", "El codigo del director no debe ser vacio");
+			return "estudiante/subirPropuesta";
+		}
+
+		Tutor tutor =this.tutor.findById(director.trim()).orElse(null);
+
+		if(tutor==null){
+			model.addAttribute("proyecto", proyecto);
+			model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
+			model.addAttribute("director", "El tutor no se encuentra en la base de datos");
+			return "estudiante/subirPropuesta";
+		}
+
+			proyecto.setEstado(this.estado.findById(1).orElse(null));
+			proyecto.setTipoProyecto(tipoProyecto);
+			proyecto.setEstudiante(estudiante.getEstudiante());
+			proyecto.setCantidad(2);
 			
 			
 			
 			String uniqueFile=null;
 			try {
 				uniqueFile=this.upload.copy(archivo);
-				propuesta.setDocumento(uniqueFile+"."+arch);
+				proyecto.setDocumento(uniqueFile+"."+arch);
 			} catch (IOException e) {
-				model.addAttribute("propuesta", propuesta);
+				model.addAttribute("proyecto", proyecto);
 				model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
 				model.addAttribute("archivo", "el archivo no se pudo subir");
 				return "estudiante/subirPropuesta";
 			}
-			this.proyecto.save(propuesta);
+
+			Dirige dirige =new Dirige();
+			dirige.setProyecto(proyecto);
+			dirige.setFecha(new Date());
+			dirige.setTutor(tutor);
+
+			this.proyecto.save(proyecto);
+			this.dirigeDao.save(dirige);
+
 			status.setComplete();
 		
 		
@@ -368,24 +465,29 @@ public class EstudianteController {
 	}
 	
 	@GetMapping("/info-propuesta")
-	public String ver(Principal principal,Model model,RedirectAttributes flash) {
+	public String ver(Principal principal, Model model, RedirectAttributes flash) {
 		Usuario estudiante=this.user.getUsuarioById(principal.getName());
-		if(estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()){
+		Proyecto proyecto=this.proyecto.findById(estudiante.getEstudiante().getProyecto()).orElse(null);
+
+
+		if((estudiante.getEstudiante().getProyectos()==null || estudiante.getEstudiante().getProyectos().isEmpty()) &&  proyecto==null){
 			flash.addFlashAttribute("infop", "");
 			return "redirect:/estudiante/subir";
 		}
-		Proyecto pro=estudiante.getEstudiante().getProyectos().get(0);
-		System.out.println("Entro al metodo");
+
+		if(proyecto==null){
+		 proyecto=estudiante.getEstudiante().getProyectos().get(0);
+		}
 
 		try{
-			Tutor tut=this.dirigeDao.getByPropuesta(pro.getIdProyecto()).getTutor();
+			Tutor tut=this.dirigeDao.getByPropuesta(proyecto.getIdProyecto()).getTutor();
 			model.addAttribute("tutor",tut);
 		}catch (Exception e){
 			model.addAttribute("tutor",null);
 		}
 
 		System.out.println("Entro al metodo");
-		model.addAttribute("propuesta", pro);
+		model.addAttribute("propuesta", proyecto);
 
 		model.addAttribute("infop","");
 		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
@@ -428,6 +530,7 @@ public class EstudianteController {
 		 response.setHeader("Content-Transfer-Encoding", "binary");
 		 
 		 try {
+		 	filename=filename.replace(".docx","");
 			 BufferedOutputStream bos= new BufferedOutputStream(response.getOutputStream());
 			 FileInputStream file =new FileInputStream(this.upload.getPath(filename).toString());
 			 byte [] buf=new byte[1024];

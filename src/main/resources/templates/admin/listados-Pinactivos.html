@@ -37,7 +37,13 @@
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-danger">Listado de profesores inhabilitado</h6>
                         </div>
-                        <div class="card-body">
+                        <div th:if="${profesor==null || profesor.isEmpty()}" class="card-body">
+                            No se encontro ningun profesor deshabilitado
+
+                            <div th:if="${mensaje!=null}" th:text="${mensaje}" class="alert alert-warning"></div>
+
+                        </div>
+                        <div th:if="${profesor!=null && not profesor.isEmpty()}" class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
@@ -51,50 +57,16 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Pedro perez</td>
-                                            <td>1150758</td>
-                                            <td>pedroperez@ufps.edu.co</td>
-                                            <td>Direccion 1</td>
-                                            <td><a class="btn btn-success"> Habilitar</a></td>
-                                        </tr>
-                                     
+                                    <tbody th:each="pro: ${profesor}">
+                                    <tr>
+                                        <td th:text="${pro.nombres} +'  '+${pro.apellidos}">Pedro perez</td>
+                                        <td th:text="${pro.codigo}">1150758</td>
+                                        <td th:text="${pro.email}">pedroperez@ufps.edu.co</td>
+                                        <td th:text="${pro.direccion}">Direccion 1</td>
+                                        <td><a class="btn btn-primary" th:href="@{'/admin/habilitar/'+${pro.codigo}}"> Habilitar</a></td>
+                                    </tr>
+
+
                                     </tbody>
                                 </table>
                             </div>

@@ -68,6 +68,12 @@
                    <span><i class="fas fa-edit"></i>
                     Editar Proyecto</span></a>
             </li>
+
+             <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infoe!=null)? 'nav-item active': 'nav-item'}">
+                 <a class="nav-link" th:href="@{/estudiante/agregar-compañero}">
+                   <span><i class="fas fa-edit"></i>
+                    Agregar Compañero</span></a>
+            </li>
             
             
 
@@ -76,7 +82,7 @@
 
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li th:if="${profesor!=null}" class="nav-item active">
+            <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:class="${ profesor!=null ? 'nav-item active':'nav-item'}">
                 <a class="nav-link collapsed " href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-user"></i>
@@ -85,8 +91,8 @@
                 <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado de profesores:</h6>
-                        <a class="collapse-item" th:href="@{'/profesoresActivos'}"> <i class="fas fa-lock-open"></i> <span>Activos</span> </a>
-                         <a class="collapse-item" th:href="@{'/profesoresInactivos'}"><i class="fas fa-lock"></i> <span>Inactivos</span></a>
+                        <a class="collapse-item" th:href="@{'/admin/profesores-activos'}"> <i class="fas fa-lock-open"></i> <span>Activos</span> </a>
+                         <a class="collapse-item" th:href="@{'/admin/profesores-inactivos'}"><i class="fas fa-lock"></i> <span>Inactivos</span></a>
                     </div>
                 </div>
             </li>
@@ -106,7 +112,7 @@
                 </div>
             </li>
 
-            <li sec:authorize="hasRole('ROLE_ADMIN')" class="nav-item">
+            <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseone"
                     aria-expanded="true" aria-controls="collapseone">
                     <i class="fas fa-user"></i>
@@ -115,8 +121,8 @@
                 <div id="collapseone" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado de estudiantes:</h6>
-                        <a class="collapse-item" th:href="@{'/estudiantesActivos'}"> <i class="fas fa-lock-open"></i> <span>Activos</span> </a>
-                         <a class="collapse-item" th:href="@{'/estudiantesInactivos'}"><i class="fas fa-lock"></i> <span>Inactivos</span></a>
+                        <a class="collapse-item" th:href="@{'/estudiantes-activos'}"> <i class="fas fa-lock-open"></i> <span>Activos</span> </a>
+                         <a class="collapse-item" th:href="@{'/estudiantes-egresados'}"><i class="fas fa-lock"></i> <span>Inactivos</span></a>
                     </div>
                 </div>
             </li>
@@ -132,9 +138,9 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Listado de proyectos:</h6>
-                        <a class="collapse-item" th:href="@{'/proyectosEspera}"><i class="far fa-clock"></i> Espera</a>
-                        <a class="collapse-item" th:href="@{'/proyectosAprovados'}"><i class="fas fa-check"></i> Aprobados</a>
-                        <a class="collapse-item" th:href="@{'/proyectosFinalizados'}"><i class="fas fa-check-double"></i> Finalizados</a>
+                        <a class="collapse-item" th:href="@{'/proyectos-espera}"><i class="far fa-clock"></i> Espera</a>
+                        <a class="collapse-item" th:href="@{'/proyectos-aprovados'}"><i class="fas fa-check"></i> Aprobados</a>
+                        <a class="collapse-item" th:href="@{'/proyectos-finalizados'}"><i class="fas fa-check-double"></i> Finalizados</a>
                     </div>
                 </div>
             </li>

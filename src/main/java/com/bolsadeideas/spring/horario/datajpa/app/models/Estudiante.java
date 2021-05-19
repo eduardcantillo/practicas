@@ -23,6 +23,8 @@ public class Estudiante implements Serializable {
 
 	private String semestre;
 
+	private int proyecto;
+
 	//bi-directional one-to-one association to Usuario
 	@OneToOne
 	@JoinColumn(name="id_estudiantes")
@@ -37,6 +39,14 @@ public class Estudiante implements Serializable {
 
 	public String getIdEstudiantes() {
 		return this.idEstudiantes;
+	}
+
+	public void setProyecto(int proyecto){
+		this.proyecto=proyecto;
+	}
+
+	public int getProyecto(){
+		return this.proyecto;
 	}
 
 	public void setIdEstudiantes(String idEstudiantes) {
