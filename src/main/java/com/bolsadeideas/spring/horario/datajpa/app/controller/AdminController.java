@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
@@ -35,6 +32,8 @@ public class AdminController {
 
 	@Autowired
 	private ProyectoDao proyectoDao;
+
+
 
 	@GetMapping({"/blank","/",""})
 	public String Index(Principal pri,Model model) {
@@ -108,18 +107,40 @@ public class AdminController {
 	public String proyectosEspera(Model model, Principal principal){
 		Usuario user=this.user.getUsuarioById(principal.getName());
 		List<Proyecto> activos=this.proyectoDao.findByEstado("ESPERA");
+
+		model.addAttribute("propuestas",activos);
 		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
 		model.addAttribute("titulo", "Listado de proyectos en espera");
 
+		return "admin/proyecto-espera";
+	}
+
+	@GetMapping("/aprobar/{id}")
+	public String asignarEvaluador(Model model,Principal principal,@PathVariable int id){
+
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		model.addAttribute("id",id);
+		return "admin/asignar";
+	}
+
+	@PostMapping("/asignar/{id}")
+	public String agregarEvaluadores(@PathVariable int id){
+
+		Proyecto pro=this.proyectoDao.findById(id).orElse(null);
+
+		if(pro==null){
+			return "redirect:/admin/proyectos-espera";
+		}
+
 		return "";
 	}
-	
-	@GetMapping("/proyecto-en-espera")
+
+	@GetMapping("/proyectos-aprobados")
 	public String ProyectoEspera(Model model) {
 		model.addAttribute("titulo", "Listado de profesores Inactivos");
-		
-		
 		model.addAttribute("profesor", true);
+
 		return "admin/proyecto-espera";
 		
 	}

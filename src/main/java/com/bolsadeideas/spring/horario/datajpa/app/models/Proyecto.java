@@ -1,9 +1,12 @@
 package com.bolsadeideas.spring.horario.datajpa.app.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,6 +25,10 @@ public class Proyecto implements Serializable {
 	@Column(name="id_proyecto")
 	private int idProyecto;
 
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date inicio;
+
 	@NotBlank(message = "Debe dar una descripcion para el proyecto")
 	private String decripcion;
 
@@ -34,6 +41,10 @@ public class Proyecto implements Serializable {
 
 	@Min(value = 6,message = "la cantidad minima de meses debe ser 6")
 	private int duracion;
+
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date finalizacion;
 
 	private boolean correccion;
 	//bi-directional many-to-one association to Asiganado
@@ -68,6 +79,27 @@ public class Proyecto implements Serializable {
 	private TipoProyecto tipoProyecto;
 
 	public Proyecto() {
+	}
+
+	@PrePersist
+	private void prePersist(){
+		this.inicio=new Date();
+	}
+
+	public Date getInicio() {
+		return inicio;
+	}
+
+	public void setInicio(Date inicio) {
+		this.inicio = inicio;
+	}
+
+	public Date getFinalizacion() {
+		return finalizacion;
+	}
+
+	public void setFinalizacion(Date finalizacion) {
+		this.finalizacion = finalizacion;
 	}
 
 	public int getCantidad() {

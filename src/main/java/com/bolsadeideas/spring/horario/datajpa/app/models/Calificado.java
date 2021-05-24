@@ -23,6 +23,8 @@ public class Calificado implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
+	private boolean actual;
+
 	private double nota;
 
 	private String observaciones;

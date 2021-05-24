@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -110,8 +111,14 @@ public class EstudianteController {
 	@GetMapping("/see-documento")
 	public String verDocumentos(Principal principal, Model model) {
 		Usuario estudiante=this.user.getUsuarioById(principal.getName());
+		Proyecto pro=this.proyecto.findById(estudiante.getEstudiante().getProyecto()).orElse(null);
+
+		if(pro==null){
+			pro=estudiante.getEstudiante().getProyectos().get(0);
+		}
+
 		model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
-		model.addAttribute("documentos", estudiante.getEstudiante().getProyectos().get(0).getDocumentos());
+		model.addAttribute("documentos",pro.getDocumentos());
 		model.addAttribute("infop", "");
 		return "estudiante/documentos";
 	}
@@ -140,6 +147,7 @@ public class EstudianteController {
 			
 		}
 		String arch=archivo.getOriginalFilename();
+		System.out.println(arch);
 		int index=arch.lastIndexOf(".");
 		
 		if(index>0) {
@@ -162,8 +170,13 @@ public class EstudianteController {
 			model.addAttribute("archivo", "el archivo no se pudo subir");
 			return "estudiante/subir-doc";
 			}
-		
-		documento.setProyecto(estudiante.getEstudiante().getProyectos().get(0));
+		Proyecto pro=this.proyecto.findById(estudiante.getEstudiante().getProyecto()).orElse(null);
+
+		if(pro==null){
+			pro=estudiante.getEstudiante().getProyectos().get(0);
+		}
+
+		documento.setProyecto(pro);
 		this.documento.save(documento);
 		
 		
@@ -436,7 +449,10 @@ public class EstudianteController {
 			proyecto.setTipoProyecto(tipoProyecto);
 			proyecto.setEstudiante(estudiante.getEstudiante());
 			proyecto.setCantidad(2);
-			
+			proyecto.setInicio(new Date());
+			Calendar c=Calendar.getInstance();
+			c.add(Calendar.MONTH,proyecto.getDuracion());
+			proyecto.setFinalizacion(c.getTime());
 			
 			
 			String uniqueFile=null;

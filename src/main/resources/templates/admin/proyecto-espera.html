@@ -30,7 +30,7 @@
                     <!-- Page Heading -->
                     
                     <h1 class="h3 mb-2 text-gray-800"><strong>En espera</strong></h1>
-                    <p class="mb-4 text-dark">Listado de los proyectos que aun  no encuentran calificados.</p>
+                    <p class="mb-4 text-dark">Listado de los proyectos que aun no se le asigna evaluadores.</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
@@ -43,11 +43,11 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Integrantes</th>
+                                            <th>Integran</th>
                                             <th>Estado</th>
-                                             <th>Tipo Proyecto</th>
-                                             <th>Requiere Documentos</th>
-                                            <th>Calificadores</th>
+                                            <th>Tipo Proyecto</th>
+                                            <th>Director</th>
+                                            <th>Aprobar</th>
                                             
                                         </tr>
                                         
@@ -55,12 +55,13 @@
                                     
                                     <tbody>
                                         <tr th:each="proyec :${propuestas}">
-                                            <td th:text="${proyec.id}"></td>
-                                            <td th:text="${proyec.estudiante.usuario.name}"></td>
+                                            <td th:text="${proyec.idProyecto}"></td>
+                                            <td th:text="${proyec.estudiante.usuario.nombres}"></td>
                                             <td th:text="${proyec.estado.nombre}"></td>
                                             <td th:text="${proyec.tipoProyecto.name}"></td>
-                                            <td th:text="${(proyec.tipoProyecto.documentos == 1)? 'Si' : 'No'}"></td>
-                                            <td><a class="btn btn-danger"> ver calificadores</a></td>
+                                            <td th:if="${proyec.diriges!=null && not proyec.diriges.isEmpty()}" th:text="${proyec.diriges.get(0).tutor.usuario.nombres}"></td>
+                                            <td th:if="${proyec.diriges==null ||  proyec.diriges.isEmpty()}" >No tiene tutor asignado</td>
+                                            <td><a th:href="@{'/admin/aprobar/'+${proyec.idProyecto}}" class="btn btn-danger"> Aprobar</a></td>
                          
                                         </tr>
                                     </tbody>

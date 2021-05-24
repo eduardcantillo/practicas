@@ -1,0 +1,71 @@
+
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="layout/head :: head">
+    </head>
+
+
+    <body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav th:replace="layout/topbar :: topbar"></nav>
+                <div class="card o-hidden border-0 shadow-lg">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-4 d-none d-lg-block" >
+
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="p-5">
+
+
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-800 mb-4">Agregue por lo menos dos evaluadores para <br> aprobar el proyecto</h1>
+                                    </div>
+
+                                    <form class="user" th:action="@{'/admin/asignar/'+${id}}" method="post">
+                                        <div class="form-group">
+
+                                            <label class="label text-dark" for="codigo1">Evaluador 1</label>
+                                            <input type="text" class="form-control" id="codigo1" name="codigo1">
+
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label class="label text-dark" for="codigo">Evaluador 2 </label>
+                                            <input type="text" class="form-control" id="codigo" name="codigo">
+
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label class="label text-dark" for="codigo2">Evaluador 3</label>
+                                            <input type="text" class="form-control" id="codigo2" name="codigo2">
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="submit"  value="Aprobar" class="btn btn-danger btn-block" >
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="layout/import-js :: import-js"></div>
+    </body>
+    </html>

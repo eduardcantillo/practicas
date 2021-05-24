@@ -49,7 +49,7 @@
                                             <th>Integrantes</th>
                                             <th>Estado</th>
                                              <th>Tipo Proyecto</th>
-                                             <th>Requiere Documentos</th>
+                                             <th>informacion </th>
                                             <th> ver documento</th>
                                             <th>Calificadores</th>
                                             
@@ -59,13 +59,14 @@
                                     
                                     <tbody>
                                         <tr th:each="proyec :${propuestas}">
-                                            <td th:text="${proyec.idProyecto}"></td>
+                                            <td th:text="${proyec.titulo}"></td>
                                             <td th:text="${proyec.estudiante.usuario.nombres}"></td>
                                             <td th:text="${proyec.estado.nombre}"></td>
                                             <td th:text="${proyec.tipoProyecto.name}"></td>
-                                            <td th:text="${(proyec.tipoProyecto.documentos == 1)? 'Si' : 'No'}"></td>
+                                            <td><a th:href="@{'tutor/proyecto'+${proyec.idProyecto}}">Ver informacion</a> </td>
                                             <th> <a  th:href="@{'/tutor/ver-propuesta/'+${proyec.documento}}">Descargar propuesta</a> </th>
-                                            <td><a > ver calificadores</a></td>
+                                            <td th:if="${proyec.asiganados!=null && not proyec.asiganados.isEmpty()}"><a class="link" th:href="@{'/tutor/calificadores'}" > ver calificadores</a></td>
+                                            <td th:if="${proyec.asiganados==null || proyec.asiganados.isEmpty()}">Sin asignar</td>
                          
                                         </tr>
                                     </tbody>
