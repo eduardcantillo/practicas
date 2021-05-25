@@ -124,7 +124,7 @@ public class SignUpController {
 		}
 
 		usuario.setHabilitado((byte) 1);
-		usuario.setRol("ROLE_CALIFICADOR");
+		usuario.setRol("ROLE_EVALUADOR");
 		usuario.setPassword(this.encoder.encode(usuario.getPassword()));
 
 		Evaluador evaluador = new Evaluador();

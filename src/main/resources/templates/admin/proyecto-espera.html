@@ -29,13 +29,13 @@
 
                     <!-- Page Heading -->
                     
-                    <h1 class="h3 mb-2 text-gray-800"><strong>En espera</strong></h1>
-                    <p class="mb-4 text-dark">Listado de los proyectos que aun no se le asigna evaluadores.</p>
+                    <h1 class="h3 mb-2 text-gray-800"><strong th:text="${ aprobados==null ? 'En espera':'Aprobado'}">En espera</strong></h1>
+                    <p class="mb-4 text-dark" th:text="${ aprobados==null ? 'Listado de los proyectos que aun no se le asigna evaluadores.':'Listado de proyectos con evaluadores'}"></p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-danger">Listado de proyectos en espera</h6>
+                            <h6 class="m-0 font-weight-bold text-danger" th:text="${ aprobados==null ? 'Listado de proyectos en espera':'Listado de proyectos aprobados'}"></h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -43,11 +43,11 @@
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Integran</th>
+                                            <th>Integrantes</th>
                                             <th>Estado</th>
                                             <th>Tipo Proyecto</th>
                                             <th>Director</th>
-                                            <th>Aprobar</th>
+                                            <th th:if="${aprobados==null}">Aprobar</th>
                                             
                                         </tr>
                                         
@@ -61,7 +61,7 @@
                                             <td th:text="${proyec.tipoProyecto.name}"></td>
                                             <td th:if="${proyec.diriges!=null && not proyec.diriges.isEmpty()}" th:text="${proyec.diriges.get(0).tutor.usuario.nombres}"></td>
                                             <td th:if="${proyec.diriges==null ||  proyec.diriges.isEmpty()}" >No tiene tutor asignado</td>
-                                            <td><a th:href="@{'/admin/aprobar/'+${proyec.idProyecto}}" class="btn btn-danger"> Aprobar</a></td>
+                                            <td th:if="${aprobados==null}"><a th:href="@{'/admin/aprobar/'+${proyec.idProyecto}}" class="btn btn-danger"> Aprobar</a></td>
                          
                                         </tr>
                                     </tbody>

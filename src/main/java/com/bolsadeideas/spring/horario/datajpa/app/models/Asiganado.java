@@ -22,6 +22,8 @@ public class Asiganado implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
+	
+	private boolean calificable;
 
 	//bi-directional many-to-one association to Proyecto
 	@ManyToOne
@@ -67,5 +69,15 @@ public class Asiganado implements Serializable {
 	public void setEvaluador(Evaluador evaluador) {
 		this.evaluador = evaluador;
 	}
+
+	public boolean isCalificable() {
+		return calificable;
+	}
+
+	public void setCalificable(boolean calificable) {
+		this.calificable = calificable;
+	}
+	
+	
 
 }

@@ -30,7 +30,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-800 mb-4">Agregue por lo menos dos evaluadores para <br> aprobar el proyecto</h1>
                                     </div>
-
+									<div th:if="${mensaje!=null}" class="alert alert-danger" th:text="${mensaje}"></div>
                                     <form class="user" th:action="@{'/admin/asignar/'+${id}}" method="post">
                                         <div class="form-group">
 
@@ -42,14 +42,14 @@
                                         <div class="form-group">
 
                                             <label class="label text-dark" for="codigo">Evaluador 2 </label>
-                                            <input type="text" class="form-control" id="codigo" name="codigo">
+                                            <input type="text" class="form-control" id="codigo2" name="codigo2">
 
                                         </div>
 
                                         <div class="form-group">
 
                                             <label class="label text-dark" for="codigo2">Evaluador 3</label>
-                                            <input type="text" class="form-control" id="codigo2" name="codigo2">
+                                            <input type="text" class="form-control" id="codigo3" name="codigo3">
 
                                         </div>
 
