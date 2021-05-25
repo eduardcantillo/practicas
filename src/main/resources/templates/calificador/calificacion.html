@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head">
+</head>
+
+
+<body>
+
+
+    <div id="wrapper">
+        <ul th:replace="layout/sidebar :: sidebar">
+        </ul>
+          
+        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+      		 <nav th:replace="layout/topbar :: topbar"></nav>
+        <div class="card o-hidden border-0 shadow-lg">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-3 d-none d-lg-block" >
+            
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4" th:text="${tituloProyecto}">Califique cada uno de los aspectos del ante proyecto</h1>
+                            </div>
+                          
+                          <form class="user" th:action="@{/evaluador/calificar}" method="post" th:object="${calificado}">
+                          
+
+                                <div class="form-group row">
+                                
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <label for="titlo" class="text-dark">titulo</label>
+                                        <input type="number" class="form-control form-control-user" id="titulo"
+                                        th:field="*{titulo}"
+                                            placeholder="calificacion del titulo" min="1" max="5"  required>
+                                            <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="planteaminto" class="text-dark" >planteaminto</label>
+                                        <input type="number" class="form-control form-control-user" id="planteamiento"
+                                         th:field="*{planteamiento}"
+                                            placeholder="Calificacion del planteamineto" max="5" min="1" required>
+                                             <div class="text-danger" th:if="${#fields.hasErrors('planteamiento')}" th:errors="*{planteamiento}"></div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        
+                                        	 <label for="objetivos" class="text-dark">Objetivos</label>
+                                            <input type="number" class="form-control form-control-user"
+                                                id="objetivos" th:field="*{objetivos}"  placeholder="calificacion de los objetivos"  max="5" min="1" required>
+                                                 <div class="text-danger" th:if="${#fields.hasErrors('objetivos')}" th:errors="*{objetivos}"></div>
+                                       
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="alcances" class="text-dark">Alcances y delimitaciones</label>
+                                        <input type="number" class="form-control form-control-user"
+                                        th:field="*{alcances}"
+                                            id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
+                                    </div>
+                                </div>
+                                
+                                  <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        
+                                        	 <label for="objetivos" class="text-dark">Merco teorico y antecedentes</label>
+                                            <input type="number" class="form-control form-control-user"
+                                                id="objetivos" th:field="*{marcoteorico}"  placeholder="calificacion de los objetivos"  max="5" min="1" required>
+                                                 <div class="text-danger" th:if="${#fields.hasErrors('marcoteorico')}" th:errors="*{marcoteorico}"></div>
+                                       
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="alcances" class="text-dark">Disenio metodologico</label>
+                                        <input type="number"  class="form-control form-control-user"
+                                        th:field="*{disenoMetodologico}"
+                                            id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
+                                     <div class="text-danger" th:if="${#fields.hasErrors('disenoMetodologico')}" th:errors="*{disenoMetodologico}"></div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        
+                                        	 <label for="marco teorico" class="text-dark">Presupuesto y cronograma</label>
+                                              <input type="number" class="form-control form-control-user" id="marcoteorico"
+                                     th:field="*{preosupuestoYcronograma}"
+                                        placeholder="calificicaion del marco teorico" max="5" min="1" required>
+                                        
+                                         <div class="text-danger" th:if="${#fields.hasErrors('preosupuestoYcronograma')}" th:errors="*{preosupuestoYcronograma}"></div>
+                               
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="alcances" class="text-dark">Referencias bibliograficas</label>
+                                        <input type="number" class="form-control form-control-user"
+                                        th:field="*{referencias}"
+                                            id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
+                                             <div class="text-danger" th:if="${#fields.hasErrors('referencias')}" th:errors="*{referencias}"></div>
+                                    </div>
+                                </div>
+                                
+                                 <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        
+                                        	 <label for="marco teorico" class="text-dark">Justificacion</label>
+                                              <input type="number" class="form-control form-control-user" id="marcoteorico"
+                                     th:field="*{justificacion}"
+                                        placeholder="calificicaion del marco teorico" max="5" min="1" required>
+                                        
+                                         <div class="text-danger" th:if="${#fields.hasErrors('justificacion')}" th:errors="*{justificacion}"></div>
+                               
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="alcances" class="text-dark">Cumplimiento de la norma</label>
+                                        <input type="number"  class="form-control form-control-user"
+                                        th:field="*{cumplimineto}"
+                                            id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
+                                    </div>
+                                </div>
+                                
+                                 <div class="form-group row">
+                                    <div class="col-sm-6">
+                                        
+                                        	 <label for="marco teorico" class="text-dark">Redaccion y ortografia</label>
+                                              <input type="number" class="form-control form-control-user" id="marcoteorico"
+                                     th:field="*{redacion}"
+                                        placeholder="calificicaion del marco teorico" max="5" min="1" required>
+                                        
+                                         <div class="text-danger" th:if="${#fields.hasErrors('redacion')}" th:errors="*{redacion}"></div>
+                               
+                                    </div>
+                                    <div class="col-sm-6">
+                                    <label for="alcances" class="text-dark">Estado</label>
+                                        <select class="form-control">
+                                        <option>-Seleccione una opcion- </option>
+                                        <option>Rechazado</option>
+                                        <option>Correcciones</option>
+                                        <option>Aprobar</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <input type="hidden" th:value="${idProyecto}" name="idProyecto">
+                                
+                                <div class="form-group row">
+                                	<label for="alcances" class="text-dark">Observacion</label>
+                                	<textarea class="form-control" th:field="*{observaciones}" rows="6" cols="2"></textarea>
+                                
+                                </div>
+
+
+                                <div class="form-group">
+                                    <input type="submit" class=" form-control btn btn-danger" value="Calificar">
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+	</div>
+    </div>
+ <div th:replace="layout/import-js :: import-js"></div>
+</body>
+</html>

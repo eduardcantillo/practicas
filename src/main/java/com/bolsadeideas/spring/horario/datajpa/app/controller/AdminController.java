@@ -4,18 +4,26 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.bolsadeideas.spring.horario.datajpa.app.dao.AsigandoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.EstadoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.EvaluadorDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.ProyectoDao;
+import com.bolsadeideas.spring.horario.datajpa.app.dao.TutorDao;
+import com.bolsadeideas.spring.horario.datajpa.app.dao.UsuarioDao;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Asiganado;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Estado;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Evaluador;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,7 +50,16 @@ public class AdminController {
 	private AsigandoDao asignar;
 	
 	@Autowired
+	private TutorDao tutorDao;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
+	@Autowired
 	private EvaluadorDao evaluador;
+	
+	@Autowired
+	private UsuarioDao usuarioDao;
 
 	@GetMapping({"/blank","/",""})
 	public String Index(Principal pri,Model model) {
@@ -213,4 +230,184 @@ public class AdminController {
 		return "admin/proyecto-espera";
 		
 	}
+	
+	@GetMapping("/add/admin")
+	public String AddAdmin(Model model,Principal principal) {
+		
+		Usuario usuario=new Usuario();
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		model.addAttribute("url","admin");
+		model.addAttribute("usuario",usuario);
+		model.addAttribute("mensaje", "Agregar un administrador");
+		model.addAttribute("add","");
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		
+		return "admin/registrar";
+	}
+	
+	@PostMapping("/add/admin")
+	public String saveAdmin(Model model, @Valid Usuario usuario, BindingResult result,Principal principal) {
+		
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		if(result.hasErrors()) {
+			model.addAttribute("mensaje", "Agregar un administrador");
+			model.addAttribute("url","admin");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user1=this.usuarioDao.findById(usuario.getCodigo()).orElse(null);
+		
+		if(user1!=null) {
+			model.addAttribute("mensaje", "Agregar un administrador");
+			model.addAttribute("url","admin");
+			model.addAttribute("error", "ya existe un uasuario con el codigo digitado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user2=this.usuarioDao.getByEmail(usuario.getEmail());
+		
+		if(user2!=null) {
+			model.addAttribute("mensaje", "Agregar un administrador");
+			model.addAttribute("url","admin");
+			model.addAttribute("error", "ya existe un uasuario con el email agrgado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		usuario.setPassword(encoder.encode(usuario.getPassword()));
+		usuario.setRol("ROLE_ADMINISTRADOR");
+		
+		this.usuarioDao.save(usuario);
+		
+		return "redirect:/admin/proyectos-espera";
+	}
+	
+	@GetMapping("/add/director")
+	public String AddDirector(Model model,Principal principal) {
+		
+		Usuario usuario=new Usuario();
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		model.addAttribute("url","director");
+		model.addAttribute("usuario",usuario);
+		model.addAttribute("mensaje", "Agregar un director");
+		model.addAttribute("add","");
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		
+		return "admin/registrar";
+	}
+	
+	@GetMapping("/add/evaluador")
+	public String AddEvaluador(Model model,Principal principal) {
+		
+		Usuario usuario=new Usuario();
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		model.addAttribute("url","evaluador");
+		model.addAttribute("usuario",usuario);
+		model.addAttribute("mensaje", "Agregar un Evaluador");
+		model.addAttribute("add","");
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		
+		return "admin/registrar";
+	}
+	
+	@PostMapping("/add/evaluador")
+	public String saveEvaluador(Model model, @Valid Usuario usuario, BindingResult result,Principal principal) {
+		
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		if(result.hasErrors()) {
+			model.addAttribute("mensaje", "Agregar un evaluador");
+			model.addAttribute("url","evaluador");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user1=this.usuarioDao.findById(usuario.getCodigo()).orElse(null);
+		
+		if(user1!=null) {
+			model.addAttribute("mensaje", "Agregar un evaluador");
+			model.addAttribute("url","evaluador");
+			model.addAttribute("error", "ya existe un uasuario con el codigo digitado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user2=this.usuarioDao.getByEmail(usuario.getEmail());
+		
+		if(user2!=null) {
+			model.addAttribute("mensaje", "Agregar un evaluador");
+			model.addAttribute("url","admin");
+			model.addAttribute("error", "ya existe un uasuario con el email agregado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		usuario.setHabilitado((byte) 1);
+		usuario.setPassword(encoder.encode(usuario.getPassword()));
+		usuario.setRol("ROLE_EVALUADOR");
+		Evaluador evaluador=new Evaluador();
+		evaluador.setIdEvaluador(usuario.getCodigo());
+		this.usuarioDao.save(usuario);
+		this.evaluador.save(evaluador);
+		return "redirect:/admin/proyectos-espera";
+	}
+	
+	@PostMapping("/add/director")
+	public String saveTutor(Model model, @Valid Usuario usuario, BindingResult result,Principal principal) {
+		
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		
+		if(result.hasErrors()) {
+			model.addAttribute("mensaje", "Agregar un Director");
+			model.addAttribute("url","evaluador");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user1=this.usuarioDao.findById(usuario.getCodigo()).orElse(null);
+		
+		if(user1!=null) {
+			model.addAttribute("mensaje", "Agregar un director");
+			model.addAttribute("url","evaluador");
+			model.addAttribute("error", "ya existe un uasuario con el codigo digitado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		Usuario user2=this.usuarioDao.getByEmail(usuario.getEmail());
+		
+		if(user2!=null) {
+			model.addAttribute("mensaje", "Agregar un director");
+			model.addAttribute("url","admin");
+			model.addAttribute("error", "ya existe un uasuario con el email agregado");
+			model.addAttribute("add","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/registrar";
+		}
+		
+		usuario.setHabilitado((byte) 1);
+		usuario.setPassword(encoder.encode(usuario.getPassword()));
+		usuario.setHabilitado((byte) 0);
+		usuario.setRol("ROLE_TUTOR");
+		Tutor evaluador=new Tutor();
+		evaluador.setIdTutor(usuario.getCodigo());
+		this.usuarioDao.save(usuario);
+		this.tutorDao.save(evaluador);
+		return "redirect:/admin/proyectos-espera";
+	}
+	
 }
