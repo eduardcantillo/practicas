@@ -27,8 +27,9 @@ public class Usuario implements Serializable {
 	private String apellidos;
 	
 	@NotBlank(message = "El campo direccionno debe no ser vacio")
-	private String direccion;
 	
+	private String direccion;
+	@Column(unique = true)
 	@Email(message = "EL campo debe ser tipo email")
 	@NotBlank(message = "El campo Email debe no ser vacio")
 	private String email;

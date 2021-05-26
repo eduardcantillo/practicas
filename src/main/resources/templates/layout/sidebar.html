@@ -75,7 +75,7 @@
             </li>
 
              <li sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:class="${ (infoe!=null)? 'nav-item active': 'nav-item'}">
-                 <a class="nav-link" th:href="@{/estudiante/agregar-compañero}">
+                 <a class="nav-link" th:href="@{/estudiante/agregar-companero}">
                    <span><i class="fas fa-edit"></i>
                     Agregar Compañero</span></a>
             </li>
@@ -135,6 +135,18 @@
                         <a class="collapse-item" th:href="@{'/admin/proyectos-finalizados'}"><i class="fas fa-check-double"></i> Finalizados</a>
                     </div>
                 </div>
+            </li>
+            
+             <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:class="${ (edit!=null)? 'nav-item active': 'nav-item'}">
+                 <a class="nav-link" th:href="@{/admin/edit}">
+                   <span><i class="fas fa-edit"></i>
+                    Editar informacion</span></a>
+            </li>
+            
+             <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:class="${ (info!=null)? 'nav-item active': 'nav-item'}">
+                 <a class="nav-link" th:href="@{/admin/info}">
+                   <span><i class="fas fa-edit"></i>
+                    Ver informacion</span></a>
             </li>
 
             <li sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="nav-item">

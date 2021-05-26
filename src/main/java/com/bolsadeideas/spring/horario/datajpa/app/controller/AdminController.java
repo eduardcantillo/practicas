@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.AsigandoDao;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
@@ -61,14 +62,8 @@ public class AdminController {
 	@Autowired
 	private UsuarioDao usuarioDao;
 
-	@GetMapping({"/blank","/",""})
-	public String Index(Principal pri,Model model) {
-		Usuario usuario=this.user.getUsuarioById(pri.getName());
-		System.out.println(usuario);
-		model.addAttribute("usuario",usuario);
-		
-		return "admin/blank";
-	}
+	
+	
 
 	@GetMapping("/profesores-activos")
 	public String profesoresActivos(Model model,Principal principal) {
@@ -216,7 +211,7 @@ public class AdminController {
 		return "redirect:/admin/proyectos-espera";
 	}
 
-	@GetMapping("/proyectos-aprobados")
+	@GetMapping({"/proyectos-aprobados","","/"})
 	public String ProyectoEspera(Model model,Principal principal) {
 		model.addAttribute("titulo", "Listado de los proyectos Aprobados");
 		model.addAttribute("aprobados", true);
@@ -410,4 +405,52 @@ public class AdminController {
 		return "redirect:/admin/proyectos-espera";
 	}
 	
+	@GetMapping("/info")
+	public String info(Model model,Principal principal) {
+		
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("mensaje", "Agregar un Director");
+		model.addAttribute("estudiante", user);
+		model.addAttribute("info","");
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		
+		return "admin/info";
+		
+	}
+	@GetMapping("/edit")
+	public String edit(Model model, Principal principal) {
+
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		model.addAttribute("mensaje", "Agregar un Director");
+		model.addAttribute("usuario", user);
+		model.addAttribute("edit","");
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		return "admin/edit";
+	}
+	
+	@PostMapping("/edit")
+	public String saveEdicion(Model model, Principal principal,@Valid Usuario usuario,BindingResult result,SessionStatus status,RedirectAttributes flash){
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		if(result.hasErrors()) {
+			
+			model.addAttribute("mensaje", "Agregar un Director");
+			model.addAttribute("edit","");
+			model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+			return "admin/edit";
+		}
+		
+		try {
+			
+			this.user.save(usuario);
+			flash.addFlashAttribute("success", "datos actualizados correctamente");
+			status.setComplete();
+			return "redirect:/admin/info";
+			
+		}catch (Exception e) {
+			flash.addFlashAttribute("error", "no se pudo actualizar");
+			status.setComplete();
+			return "redirect:/admin/info";
+		}
+		
+	}
 }

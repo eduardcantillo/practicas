@@ -184,7 +184,7 @@ public class EstudianteController {
 		return "redirect:/estudiante/see-documento";
 	}
 
-	@GetMapping("/agregar-compañero")
+	@GetMapping("/agregar-companero")
 	public String addCompañero(Model model,Principal principal){
 		Usuario user=this.user.getUsuarioById(principal.getName());
 		Proyecto proyecto1 = this.proyecto.findById(user.getEstudiante().getProyecto()).orElse(null);
