@@ -1,12 +1,13 @@
 package com.bolsadeideas.spring.horario.datajpa.app.controller;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.DirigeDao;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Dirige;
+import com.bolsadeideas.spring.horario.datajpa.app.models.Evaluador;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUploadService;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
-import com.bolsadeideas.spring.horario.datajpa.app.service.UploadFileDocum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,7 +23,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.security.Principal;
 import java.util.List;
-import java.util.Locale;
+
 import java.util.stream.Collectors;
 
 @Secured("ROLE_TUTOR")
@@ -35,7 +37,7 @@ public class TutorController {
 
     @Autowired
     private DirigeDao dirige;
-
+    
     @Autowired
     private IUploadService upload;
 
@@ -49,6 +51,7 @@ public class TutorController {
         return "tutor/info-tutor";
     }
 
+    
     @GetMapping("/edit")
     public String showEditInfo(Principal principal, Model model){
 
@@ -129,6 +132,31 @@ public class TutorController {
             System.out.println("Ha ocurrido un error");
             e.printStackTrace();
         }
+    }
+    
+    @GetMapping("/{idProyecto}/calificadores")
+    public String verCalificadores(Model model, @PathVariable int idProyecto,Principal principal, RedirectAttributes flash) {
+    
+    	Proyecto proyecto;
+    	
+    	Dirige dirige=this.dirige.getByPropuesta(idProyecto);
+    	
+    	if(dirige==null ) { 
+    		flash.addFlashAttribute("error", "no existe ningun proyecto con el Id especificado");
+    		return "redirect:/tutor/proyectos";}
+    	
+    	if(!dirige.getTutor().getIdTutor().equals(principal.getName())) {
+    		flash.addFlashAttribute("error", "no no tienen permiso para ver la informacion de este proyecto");
+    		return "redirect:/tutor/proyectos";
+    	} 
+    	proyecto=dirige.getProyecto();
+    	List<Evaluador> calificadores=proyecto.getAsiganados().stream().map(e -> e.getEvaluador()).collect(Collectors.toList());
+    	Usuario user=this.tutor.getUsuarioById(principal.getName());
+    	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+    	model.addAttribute("calificadores",calificadores);
+    	
+    	
+    return "";
     }
 
 }

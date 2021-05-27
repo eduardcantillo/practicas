@@ -4,7 +4,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
+
 import javax.validation.Valid;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.AsigandoDao;

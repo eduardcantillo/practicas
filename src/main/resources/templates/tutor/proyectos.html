@@ -41,6 +41,11 @@
                             <div th:if="${propuestas==null || propuestas.isEmpty()}" class="card-header py-3">
                                 <h6 class="m-0 font-weight-bold text-primary">Aun no se encuentra con proyectos asignados</h6>
                             </div>
+                            
+                            <div th:if="${error!=null}" class="alert alert-danger text-dark" th:text="${error}" >
+                                
+                            </div>
+                            
                             <div th:if="${propuestas!=null && not propuestas.isEmpty()}" class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" >
                                     <thead>
@@ -63,9 +68,9 @@
                                             <td th:text="${proyec.estudiante.usuario.nombres}"></td>
                                             <td th:text="${proyec.estado.nombre}"></td>
                                             <td th:text="${proyec.tipoProyecto.name}"></td>
-                                            <td><a th:href="@{'tutor/proyecto'+${proyec.idProyecto}}">Ver informacion</a> </td>
+                                            <td><a th:href="@{'tutor/proyecto/'+${proyec.idProyecto}}">Ver informacion</a> </td>
                                             <th> <a  th:href="@{'/tutor/ver-propuesta/'+${proyec.documento}}">Descargar propuesta</a> </th>
-                                            <td th:if="${proyec.asiganados!=null && not proyec.asiganados.isEmpty()}"><a class="link" th:href="@{'/tutor/calificadores'}" > ver calificadores</a></td>
+                                            <td th:if="${proyec.asiganados!=null && not proyec.asiganados.isEmpty()}"><a class="link" th:href="@{'/tutor/'+${proyec.idProyecto}+'/calificadores'}" > ver calificadores</a></td>
                                             <td th:if="${proyec.asiganados==null || proyec.asiganados.isEmpty()}">Sin asignar</td>
                          
                                         </tr>
