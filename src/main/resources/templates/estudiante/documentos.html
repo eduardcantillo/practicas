@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/headEstudent :: headEstudiante"></head>
 
 <body>
@@ -27,7 +27,7 @@
                     <!-- Page Heading -->
                     <h1 class="h3 mb-2 text-gray-800">Documentos</h1>
                     <p class="mb-4">Documentos cargados, corresponden a la documentacion correspondiente del proyecto </p>
-					<p class="mb-4"><a th:href="@{/estudiante/add-documento}" class="btn btn-success">Agregar documentos </a> </p>
+					<p class="mb-4" sec:authorize="hasRole('ROLE_ESTUDAINTE')"><a th:href="@{/estudiante/add-documento}" class="btn btn-success">Agregar documentos </a> </p>
                     <!-- DataTales Example -->
                     
                         <div class="card-header py-3">
@@ -41,7 +41,7 @@
                                             <th>Nombre</th>
                                             <th>Descripcion</th>
                                             <th>Ver</th>
-                                            <th>Eliminar</th>
+                                            <th sec:authorize="hasRole('ROLE_ESTUDAINTE')">Eliminar</th>
                                             
                                         </tr>
                                     </thead>
@@ -51,7 +51,7 @@
                                             <td th:text="${doc.nombre}">Tiger Nixon</td>
                                             <td th:text="${doc.descripcion}">System Architect</td>
                                             <td ><a class="btn btn-primary" th:href="@{'/estudiante/download-document/'+${doc.url}}">Descargar </a></td>
-                                           	<td ><a class="btn btn-danger" th:href="@{'/estudiante/eliminar-documento/'+${doc.idDocumento}}">Eliminar</a></td>
+                                           	<td sec:authorize="hasRole('ROLE_ESTUDAINTE')" ><a class="btn btn-danger" th:href="@{'/estudiante/eliminar-documento/'+${doc.idDocumento}}">Eliminar</a></td>
                                         </tr>
                                         
                                     </tbody>

@@ -47,7 +47,7 @@
                                             <th>Estado</th>
                                             <th>Tipo Proyecto</th>
                                             <th>Director</th>
-                                            <th th:if="${aprobados==null}">Aprobar</th>
+                                            <th th:if="${aprobados==null}">Acciones</th>
                                             
                                         </tr>
                                         
@@ -61,7 +61,9 @@
                                             <td th:text="${proyec.tipoProyecto.name}"></td>
                                             <td th:if="${proyec.diriges!=null && not proyec.diriges.isEmpty()}" th:text="${proyec.diriges.get(0).tutor.usuario.nombres}"></td>
                                             <td th:if="${proyec.diriges==null ||  proyec.diriges.isEmpty()}" >No tiene tutor asignado</td>
-                                            <td th:if="${aprobados==null}"><a th:href="@{'/admin/aprobar/'+${proyec.idProyecto}}" class="btn btn-danger"> Asignar evaluadores</a></td>
+                                            <td th:if="${aprobados==null}"><a th:href="@{'/admin/aprobar/'+${proyec.idProyecto}}" class="btn btn-success">Asignar</a>
+                                            <a th:href="@{'/admin/verProyecto/'+${proyec.idProyecto}}" class="btn btn-primary">ver</a>
+                                            </td>
                          
                                         </tr>
                                     </tbody>

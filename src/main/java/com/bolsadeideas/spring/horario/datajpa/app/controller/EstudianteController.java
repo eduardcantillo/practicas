@@ -538,7 +538,7 @@ public class EstudianteController {
 		}
 	 }
 	
-	 @Secured("ROLE_EVALUADOR")
+	 @Secured({"ROLE_EVALUADOR","ROLE_ADMINISTRADOR"})
 	 @RequestMapping("/download/{filename}")
 	 @ResponseBody
 	 public void shows(@PathVariable String filename, HttpServletResponse response) {

@@ -66,6 +66,12 @@
 									<a sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:if="${propuesta.documentos==null || propuesta.documentos.isEmpty()}" th:href="@{/estudiante/add-documento}" class="btn btn-warning btn-block">Cargar Documentos</a>
 									<a  sec:authorize="hasRole('ROLE_ESTUDIANTE')"th:if="${propuesta.documentos!=null && not propuesta.documentos.isEmpty()}" th:href="@{/estudiante/see-documento}" class="btn btn-warning btn-block">Ver documentos </a>
 									</div>
+									<div sec:authorize="hasRole('ROLE_ADMINISTRADOR')" class="form-group" th:if="${propuesta.tipoProyecto.documentos==1}">
+									<a sec:authorize="hasRole('ROLE_ADMINISTRADOR')" th:if="${propuesta.documentos==null || propuesta.documentos.isEmpty()}"  class="btn btn-warning btn-block">Esta Propuesta no tiene documentos</a>
+									<a  sec:authorize="hasRole('ROLE_ADMINISTRADOR')"th:if="${propuesta.documentos!=null && not propuesta.documentos.isEmpty()}" th:href="@{'/admin/propuesta/'+${propuesta.idProyecto}+'/documentos'}" class="btn btn-warning btn-block">Ver documentos </a>
+									</div>
+									
+									
                                 <div sec:authorize="hasRole('ROLE_ESTUDIANTE')" class="form-group row">
                                     <div class="col-sm-6">
                                         <a class="btn btn-danger btn-block">Eliminar Propuesta </a>

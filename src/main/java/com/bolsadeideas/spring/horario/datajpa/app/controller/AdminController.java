@@ -8,6 +8,7 @@ import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.AsigandoDao;
+import com.bolsadeideas.spring.horario.datajpa.app.dao.DirigeDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.EstadoDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.EvaluadorDao;
 import com.bolsadeideas.spring.horario.datajpa.app.dao.ProyectoDao;
@@ -61,6 +62,9 @@ public class AdminController {
 	
 	@Autowired
 	private UsuarioDao usuarioDao;
+	
+	@Autowired
+	private DirigeDao dirigeDao;
 
 	
 	
@@ -214,10 +218,9 @@ public class AdminController {
 	@GetMapping({"/proyectos-aprobados","","/"})
 	public String ProyectoEspera(Model model,Principal principal) {
 		model.addAttribute("titulo", "Listado de los proyectos Aprobados");
-		model.addAttribute("aprobados", true);
 		Usuario user=this.user.getUsuarioById(principal.getName());
 		List<Proyecto> activos=this.proyectoDao.findByEstado("APROBADOS");
-
+		model.addAttribute("aprobados","");
 		model.addAttribute("propuestas",activos);
 		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
 		
@@ -453,4 +456,43 @@ public class AdminController {
 		}
 		
 	}
+	
+@GetMapping("/verProyecto/{idProyecto}")
+public String verProyecto(Model model,Principal principal,@PathVariable int idProyecto) {
+	
+	Proyecto pro=proyectoDao.findById(idProyecto).orElse(null);
+	
+	Usuario estudiante=this.user.getUsuarioById(principal.getName());
+	
+	try{
+		Tutor tut=this.dirigeDao.getByPropuesta(pro.getIdProyecto()).getTutor();
+		model.addAttribute("tutor",tut);
+	}catch (Exception e){
+		model.addAttribute("tutor",null);
+	}
+
+	System.out.println("Entro al metodo");
+	model.addAttribute("propuesta", pro);
+	model.addAttribute("propuestas", true);
+	model.addAttribute("infop","");
+	model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+	model.addAttribute("titulo", "Informacion de la propuesta asignada");
+	
+	return "estudiante/info-propuesta";
+}
+
+@GetMapping("/propuesta/{idProyecto}/documentos")
+public String DocumentosPropuestas(Model model,@PathVariable int idProyecto,Principal principal){
+	Usuario estudiante=this.user.getUsuarioById(principal.getName());
+	Proyecto pro=this.proyectoDao.findById(idProyecto).orElse(null);
+
+	if(pro==null){
+		return "redirect:/admin/";
+	}
+	model.addAttribute("propuestas", true);
+	model.addAttribute("nombre",(estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+	model.addAttribute("documentos",pro.getDocumentos());
+	model.addAttribute("infop", "");
+	return "estudiante/documentos";
+}
 }
