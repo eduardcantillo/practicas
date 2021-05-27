@@ -156,7 +156,7 @@ public class TutorController {
     	model.addAttribute("calificadores",calificadores);
     	
     	
-    return "";
+    return "tutor/calificadores";
     }
 
 }
