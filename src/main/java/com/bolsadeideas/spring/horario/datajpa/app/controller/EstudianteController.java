@@ -450,8 +450,10 @@ public class EstudianteController {
 			proyecto.setEstudiante(estudiante.getEstudiante());
 			proyecto.setCantidad(2);
 			proyecto.setInicio(new Date());
+			
 			Calendar c=Calendar.getInstance();
 			c.add(Calendar.MONTH,proyecto.getDuracion());
+			
 			proyecto.setFinalizacion(c.getTime());
 			
 			
@@ -536,6 +538,7 @@ public class EstudianteController {
 		}
 	 }
 	
+	 @Secured("ROLE_EVALUADOR")
 	 @RequestMapping("/download/{filename}")
 	 @ResponseBody
 	 public void shows(@PathVariable String filename, HttpServletResponse response) {

@@ -52,8 +52,16 @@
          <a class="nav-link" th:href="@{/evaluador/}">
                    <span> <i class="fas fa-user-edit"></i>
                        Informacion personal</span></a>
+                  
      </li>
-     <li sec:authorize="hasRole('ROLE_EVALUADOR')" th:class="${ (infoe!=null)? 'nav-item active': 'nav-item'}">
+     
+     <li sec:authorize="hasRole('ROLE_EVALUADOR')" th:class="${ (editEvaluador!=null)? 'nav-item active': 'nav-item'}">
+         <a class="nav-link" th:href="@{/evaluador/edit}">
+                   <span> <i class="fas fa-user-edit"></i>
+                       Editar Informacion</span></a>
+     </li>
+     
+     <li sec:authorize="hasRole('ROLE_EVALUADOR')" th:class="${ (asignados!=null)? 'nav-item active': 'nav-item'}">
          <a class="nav-link" th:href="@{/evaluador/asignados}">
                    <span> <i class="fas fa-user-edit"></i>
                        Proyectos asignados</span></a>

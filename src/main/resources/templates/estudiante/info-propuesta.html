@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/headEstudent :: headEstudiante"></head>
 
 <body>
@@ -61,12 +61,12 @@
                                         <input type="text" th:value="${propuesta.tipoProyecto.name}" readonly class="form-control" id="tipo-proyecto" name="documento">
                                      </div>
                                 </div>
-									<div class="form-group text-center text-dark" th:if="${propuesta.tipoProyecto.documentos==0}">Este proyecto no contiene documentos externos</div>
-									<div class="form-group" th:if="${propuesta.tipoProyecto.documentos==1}">
-									<a th:if="${propuesta.documentos==null || propuesta.documentos.isEmpty()}" th:href="@{/estudiante/add-documento}" class="btn btn-warning btn-block">Cargar Documentos</a>
-									<a th:if="${propuesta.documentos!=null && not propuesta.documentos.isEmpty()}" th:href="@{/estudiante/see-documento}" class="btn btn-warning btn-block">Ver documentos </a>
+									<div sec:authorize="hasRole('ROLE_ESTUDIANTE')" class="form-group text-center text-dark" th:if="${propuesta.tipoProyecto.documentos==0}">Este proyecto no contiene documentos externos</div>
+									<div sec:authorize="hasRole('ROLE_ESTUDIANTE')" class="form-group" th:if="${propuesta.tipoProyecto.documentos==1}">
+									<a sec:authorize="hasRole('ROLE_ESTUDIANTE')" th:if="${propuesta.documentos==null || propuesta.documentos.isEmpty()}" th:href="@{/estudiante/add-documento}" class="btn btn-warning btn-block">Cargar Documentos</a>
+									<a  sec:authorize="hasRole('ROLE_ESTUDIANTE')"th:if="${propuesta.documentos!=null && not propuesta.documentos.isEmpty()}" th:href="@{/estudiante/see-documento}" class="btn btn-warning btn-block">Ver documentos </a>
 									</div>
-                                <div class="form-group row">
+                                <div sec:authorize="hasRole('ROLE_ESTUDIANTE')" class="form-group row">
                                     <div class="col-sm-6">
                                         <a class="btn btn-danger btn-block">Eliminar Propuesta </a>
                                        

@@ -14,4 +14,6 @@ public interface AsigandoDao extends CrudRepository<Asiganado, Integer>{
 	
 	@Query("select a from Asiganado a join fetch a.evaluador e where e.idEvaluador=?1 and a.calificable=?2 and a.proyecto.idProyecto=?3")
 	public Asiganado getByEstadoAndEvaluadorAndIdProyecto(String id,boolean calificable, int idProyecto);
+	
+	
 }
