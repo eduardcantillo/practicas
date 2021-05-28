@@ -29,50 +29,42 @@
 
                     <!-- Page Heading -->
                     
-                    <h1 class="h3 mb-2 text-gray-800"><strong>Mis proyectos</strong></h1>
-                    <p class="mb-4 text-dark">Listado de los proyectos en los que me encuentro como tutor.</p>
+                    <h1 class="h3 mb-2 text-gray-800"><strong>Calificicadores</strong></h1>
+                    <p class="mb-4 text-dark">Listado de Calificadores del proyecto</p>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-danger">Listado de mis proyectos asiganados</h6>
+                            <h6 class="m-0 font-weight-bold text-danger">Calificadores</h6>
                         </div>
                         <div  class="card-body">
-                            <div th:if="${propuestas==null || propuestas.isEmpty()}" class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Aun no se encuentra con proyectos asignados</h6>
+                            <div th:if="${calificadores==null || calificadores.isEmpty()}" class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Aun no se encuentra con calificadores asignados</h6>
                             </div>
                             
                             <div th:if="${error!=null}" class="alert alert-danger text-dark" th:text="${error}" >
                                 
                             </div>
                             
-                            <div th:if="${propuestas!=null && not propuestas.isEmpty()}" class="table-responsive">
+                            <div th:if="${calificadores!=null && not calificadores.isEmpty()}" class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" >
                                     <thead>
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>Integrantes</th>
-                                            <th>Estado</th>
-                                             <th>Tipo Proyecto</th>
-                                             <th>informacion </th>
-                                            <th> ver documento</th>
-                                            <th>Calificadores</th>
+                                            <th>Nombres</th>
+                                            <th>Apellido</th>
+                                            <th>Telefono</th>
+                                             
                                             
                                         </tr>
                                         
                                     </thead>
                                     
                                     <tbody>
-                                        <tr th:each="proyec :${propuestas}">
-                                            <td th:text="${proyec.titulo}"></td>
-                                            <td th:text="${proyec.estudiante.usuario.nombres}"></td>
-                                            <td th:text="${proyec.estado.nombre}"></td>
-                                            <td th:text="${proyec.tipoProyecto.name}"></td>
-                                            <td><a th:href="@{'/tutor/proyecto/'+${proyec.idProyecto}}">Ver informacion</a> </td>
-                                            <th> <a  th:href="@{'/tutor/ver-propuesta/'+${proyec.documento}}">Descargar propuesta</a> </th>
-                                            <td th:if="${proyec.asiganados!=null && not proyec.asiganados.isEmpty()}"><a class="link" th:href="@{'/tutor/'+${proyec.idProyecto}+'/calificadores'}" > ver calificadores</a></td>
-                                            <td th:if="${proyec.asiganados==null || proyec.asiganados.isEmpty()}">Sin asignar</td>
-                         
+                                        <tr th:each="proyec :${calificadores}">
+                                            <td th:text="${proyec.nombres}"></td>
+                                            <td th:text="${proyec.apellidos}"></td>
+                                            <td th:text="${proyec.telefono}"></td>
+                                          
                                         </tr>
                                     </tbody>
                                 </table>

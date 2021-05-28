@@ -2,7 +2,6 @@ package com.bolsadeideas.spring.horario.datajpa.app.controller;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.DirigeDao;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Dirige;
-import com.bolsadeideas.spring.horario.datajpa.app.models.Evaluador;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
@@ -100,13 +99,6 @@ public class TutorController {
         return "redirect:/tutor/";
     }
 
-    @GetMapping("/proyecto/{id}")
-    public String verProyecto(@RequestParam int id, Principal principal, Model model){
-
-
-        return "";
-    }
-
     @RequestMapping("/ver-propuesta/{filename}")
     @ResponseBody
     public void shows(@PathVariable String filename, HttpServletResponse response) {
@@ -134,6 +126,46 @@ public class TutorController {
         }
     }
     
+    @GetMapping("/proyecto/{idProyecto}")
+    public String verInfoProyecto(@PathVariable int idProyecto, Model model,Principal principal,RedirectAttributes flash) {
+
+    	
+    	
+    	
+    
+    	Proyecto pro=null;
+    	Dirige dirige=this.dirige.getByPropuesta(idProyecto);
+    	
+    	if(dirige==null) {
+    		flash.addFlashAttribute("erro", "Esta propuesta no existe");
+    		return "redirect:/tutor/proyectos";
+    	}
+    	
+    	if(!dirige.getTutor().getIdTutor().equals(principal.getName())) {
+    		flash.addFlashAttribute("error", "no no tienen permiso para ver la informacion de este proyecto");
+    		return "redirect:/tutor/proyectos";
+    	} 
+    	
+    	pro=dirige.getProyecto();
+    	
+    	Usuario estudiante=this.tutor.getUsuarioById(principal.getName());
+		try{
+			Tutor tut=estudiante.getTutor();
+			model.addAttribute("tutor",tut);
+		}catch (Exception e){
+			model.addAttribute("tutor",null);
+		}
+
+		System.out.println("Entro al metodo");
+		model.addAttribute("propuesta", pro);
+
+		model.addAttribute("infop","");
+		model.addAttribute("nombre", (estudiante.getNombres()+" "+estudiante.getApellidos()).toUpperCase());
+		model.addAttribute("titulo", "Informacion de la propuesta asignada");
+    	
+    	return "estudiante/info-propuesta";
+    }
+    
     @GetMapping("/{idProyecto}/calificadores")
     public String verCalificadores(Model model, @PathVariable int idProyecto,Principal principal, RedirectAttributes flash) {
     
@@ -145,12 +177,17 @@ public class TutorController {
     		flash.addFlashAttribute("error", "no existe ningun proyecto con el Id especificado");
     		return "redirect:/tutor/proyectos";}
     	
+    	
     	if(!dirige.getTutor().getIdTutor().equals(principal.getName())) {
     		flash.addFlashAttribute("error", "no no tienen permiso para ver la informacion de este proyecto");
     		return "redirect:/tutor/proyectos";
     	} 
+    	
+    	
     	proyecto=dirige.getProyecto();
-    	List<Evaluador> calificadores=proyecto.getAsiganados().stream().map(e -> e.getEvaluador()).collect(Collectors.toList());
+    	List<Usuario> calificadores=proyecto.getAsiganados().stream().map(e -> e.getEvaluador().getUsuario()).collect(Collectors.toList());
+    	
+    	
     	Usuario user=this.tutor.getUsuarioById(principal.getName());
     	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
     	model.addAttribute("calificadores",calificadores);

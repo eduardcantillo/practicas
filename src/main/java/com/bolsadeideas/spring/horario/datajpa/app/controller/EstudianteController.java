@@ -7,6 +7,7 @@ import java.security.Principal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -566,6 +567,26 @@ public class EstudianteController {
 			e.printStackTrace();
 		}
 	 }
+	 
+	 
+	 @GetMapping("/calificadores")
+	    public String verCalificadores(Model model,Principal principal, RedirectAttributes flash) {
+	    
+		 Usuario user=this.user.getUsuarioById(principal.getName());
+	    Proyecto proyecto=this.proyecto.findById(user.getEstudiante().getProyecto()).orElse(null);
+	    	
+	    	if(proyecto==null ) { 
+	    		proyecto=user.getEstudiante().getProyectos().get(0);
+	    		}
+	    	
+	    	List<Usuario> calificadores=proyecto.getAsiganados().stream().map(e -> e.getEvaluador().getUsuario()).collect(Collectors.toList());
+	    
+	    	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+	    	model.addAttribute("calificadores",calificadores);
+	    	
+	    	
+	    return "tutor/calificadores";
+	    }
 	
 	
 }
