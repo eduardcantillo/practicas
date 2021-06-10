@@ -36,15 +36,15 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                     <label for="titlo" class="text-dark">titulo</label>
                                         <input type="number" class="form-control form-control-user" id="titulo"
-                                        th:field="*{titulo}"
+                                        th:field="*{titulo}" step="0.1"
                                             placeholder="calificacion del titulo" min="1" max="5"  required>
                                             <div class="text-danger" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></div>
                                     </div>
                                     <div class="col-sm-6">
                                     <label for="planteaminto" class="text-dark" >planteaminto</label>
                                         <input type="number" class="form-control form-control-user" id="planteamiento"
-                                         th:field="*{planteamiento}"
-                                            placeholder="Calificacion del planteamineto" max="5" min="1" required>
+                                         th:field="*{planteamiento}" step="0.1"
+                                            placeholder="Calificacion del planteamineto"   min="1.0"  max="5.0"required>
                                              <div class="text-danger" th:if="${#fields.hasErrors('planteamiento')}" th:errors="*{planteamiento}"></div>
                                     </div>
                                     
@@ -54,7 +54,7 @@
                                     <div class="col-sm-6">
                                         
                                         	 <label for="objetivos" class="text-dark">Objetivos</label>
-                                            <input type="number" class="form-control form-control-user"
+                                            <input type="number" class="form-control form-control-user" step="0.1"
                                                 id="objetivos" th:field="*{objetivos}"  placeholder="calificacion de los objetivos"  max="5" min="1" required>
                                                  <div class="text-danger" th:if="${#fields.hasErrors('objetivos')}" th:errors="*{objetivos}"></div>
                                        
@@ -62,7 +62,7 @@
                                     <div class="col-sm-6">
                                     <label for="alcances" class="text-dark">Alcances y delimitaciones</label>
                                         <input type="number" class="form-control form-control-user"
-                                        th:field="*{alcances}"
+                                        th:field="*{alcances}" step="0.1"
                                             id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@
                                     <div class="col-sm-6">
                                         
                                         	 <label for="objetivos" class="text-dark">Merco teorico y antecedentes</label>
-                                            <input type="number" class="form-control form-control-user"
+                                            <input type="number" class="form-control form-control-user" step="0.1"
                                                 id="objetivos" th:field="*{marcoteorico}"  placeholder="calificacion de los objetivos"  max="5" min="1" required>
                                                  <div class="text-danger" th:if="${#fields.hasErrors('marcoteorico')}" th:errors="*{marcoteorico}"></div>
                                        
@@ -79,7 +79,7 @@
                                     <div class="col-sm-6">
                                     <label for="alcances" class="text-dark">Disenio metodologico</label>
                                         <input type="number"  class="form-control form-control-user"
-                                        th:field="*{disenoMetodologico}"
+                                        th:field="*{disenoMetodologico}" step="0.1"
                                             id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
                                      <div class="text-danger" th:if="${#fields.hasErrors('disenoMetodologico')}" th:errors="*{disenoMetodologico}"></div>
                                     </div>
@@ -90,7 +90,7 @@
                                         
                                         	 <label for="marco teorico" class="text-dark">Presupuesto y cronograma</label>
                                               <input type="number" class="form-control form-control-user" id="marcoteorico"
-                                     th:field="*{preosupuestoYcronograma}"
+                                     th:field="*{preosupuestoYcronograma}" step="0.1"
                                         placeholder="calificicaion del marco teorico" max="5" min="1" required>
                                         
                                          <div class="text-danger" th:if="${#fields.hasErrors('preosupuestoYcronograma')}" th:errors="*{preosupuestoYcronograma}"></div>
@@ -99,7 +99,7 @@
                                     <div class="col-sm-6">
                                     <label for="alcances" class="text-dark">Referencias bibliograficas</label>
                                         <input type="number" class="form-control form-control-user"
-                                        th:field="*{referencias}"
+                                        th:field="*{referencias}" step="0.1"
                                             id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
                                              <div class="text-danger" th:if="${#fields.hasErrors('referencias')}" th:errors="*{referencias}"></div>
                                     </div>
@@ -110,7 +110,7 @@
                                         
                                         	 <label for="marco teorico" class="text-dark">Justificacion</label>
                                               <input type="number" class="form-control form-control-user" id="marcoteorico"
-                                     th:field="*{justificacion}"
+                                     th:field="*{justificacion}" step="0.1"
                                         placeholder="calificicaion del marco teorico" max="5" min="1" required>
                                         
                                          <div class="text-danger" th:if="${#fields.hasErrors('justificacion')}" th:errors="*{justificacion}"></div>
@@ -119,7 +119,7 @@
                                     <div class="col-sm-6">
                                     <label for="alcances" class="text-dark">Cumplimiento de la norma</label>
                                         <input type="number"  class="form-control form-control-user"
-                                        th:field="*{cumplimineto}"
+                                        th:field="*{cumplimineto}"  step="0.1"
                                             id="alcance"  placeholder="calificacion del alcacne" max="5" min="1" required>
                                     </div>
                                 </div>
@@ -129,7 +129,7 @@
                                         
                                         	 <label for="marco teorico" class="text-dark">Redaccion y ortografia</label>
                                               <input type="number" class="form-control form-control-user" id="marcoteorico"
-                                     th:field="*{redacion}"
+                                     th:field="*{redacion}" step="0.1"
                                         placeholder="calificicaion del marco teorico" max="5" min="1" required>
                                         
                                          <div class="text-danger" th:if="${#fields.hasErrors('redacion')}" th:errors="*{redacion}"></div>

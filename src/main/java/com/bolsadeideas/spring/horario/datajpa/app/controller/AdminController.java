@@ -1,10 +1,12 @@
 package com.bolsadeideas.spring.horario.datajpa.app.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
-
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 
 import com.bolsadeideas.spring.horario.datajpa.app.dao.AsigandoDao;
@@ -21,6 +23,8 @@ import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -39,6 +43,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @SessionAttributes("usuario")
 public class AdminController {
 
+	@Autowired
+    private JavaMailSender mailSender;
+	
 	@Autowired
 	private IUsuarioService user;
 
@@ -81,9 +88,36 @@ public class AdminController {
 		return "admin/listados-Pactivos";
 	}
 
+	
+	 public void sendEmail(String recipientEmail,String nombre,String email,String estado)
+	            throws MessagingException, UnsupportedEncodingException {
+	        MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+	        helper.setFrom("trabajosdegrados@ufps.edu.co", "Portal para los tranajos de grados");
+	        helper.setTo(recipientEmail);
+
+	        String subject = "Cambio de contraseña contraseña";
+
+	        String content = "<p>Hola, "+nombre+"</p>"
+	                + "<p>Tu cuenta en la plataforma de para de control de .</p>"
+	                + "<p>Los proyectos de grado acaba de ser:</p>"
+	                + "<p>"+estado+"</p>"
+	                + "<br>"
+	                + "<p>Para mas informacion comuniquese al siguiente correo, "
+	                + email+"</p>";
+
+	        helper.setSubject(subject);
+
+	        helper.setText(content, true);
+
+	        mailSender.send(message);
+	    }
+	
 	@GetMapping("deshabilitar/{id}")
-	public String deshabilitar(@PathVariable String id, RedirectAttributes flask){
+	public String deshabilitar(@PathVariable String id, RedirectAttributes flask,Principal principal){
 		Usuario user=this.user.getUsuarioById(id);
+		Usuario admin=this.user.getUsuarioById(principal.getName());
 		if (user == null) {
 			flask.addFlashAttribute("mensaje","no se encontro el director en la base de datos");
 			return "redirect:/admin/profesores-activos";
@@ -93,15 +127,23 @@ public class AdminController {
 		}
 
 		user.setHabilitado((byte)0);
-		this. user.save(user);
+		try {
+			sendEmail(user.getEmail(),user.getNombres(),admin.getEmail(),"Desactivada");
+			this. user.save(user);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		return "redirect:/admin/profesores-inactivos";
 	}
 
 
 	@GetMapping("habilitar/{id}")
-	public String habilitar(@PathVariable String id, RedirectAttributes flask){
+	public String habilitar(@PathVariable String id, RedirectAttributes flask,Principal principal){
 		Usuario user=this.user.getUsuarioById(id);
+		Usuario admin=this.user.getUsuarioById(principal.getName());
 		if (user == null) {
 			flask.addFlashAttribute("mensaje","no se encontro el director en la base de datos");
 			return "redirect:/admin/profesores-activos";
@@ -111,7 +153,14 @@ public class AdminController {
 		}
 
 		user.setHabilitado((byte)1);
-		this. user.save(user);
+		try {
+			sendEmail(user.getEmail(),user.getNombres(),admin.getNombres(),"Activada");
+			this. user.save(user);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		return "redirect:/admin/profesores-activos";
 	}

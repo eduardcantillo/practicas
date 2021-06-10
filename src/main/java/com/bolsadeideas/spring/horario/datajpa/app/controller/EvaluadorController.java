@@ -27,6 +27,8 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -192,10 +194,25 @@ public class EvaluadorController {
     		
     		return "calificador/calificacion";
     	}
+    	calificado.setFecha(new Date());
+    	calificado.setTutor(user.getEvaluador());
     	
-    	System.out.println(calificado.toString());
+    	double cal70=(calificado.getTitulo()*0.05)+(calificado.getPlanteamiento()*0.2)+(calificado.getJustificacion()*0.15)
+    			+(calificado.getObjetivos()*0.2) +(calificado.getAlcances()*0.05)+(calificado.getMarcoteorico()*0.1)
+    			+(calificado.getDisenoMetodologico()*0.1)+(calificado.getPreosupuestoYcronograma()*0.05)
+    			+(calificado.getReferencias()*0.1);
     	
-    	return "";
+    	double cal30=(calificado.getCumplimineto()*0.5) +(calificado.getRedacion()*0.5);
+    	
+    	
+    	
+    	DecimalFormat format=new DecimalFormat();
+    	format.setMaximumIntegerDigits(2);
+    	
+    	calificado.setNota((cal70*0.7)+(cal30*0.3));
+    	
+    
+    	return "redirect:/evaluador/calificar/"+idProyecto;
     	
     }
 }

@@ -31,48 +31,48 @@ public class Calificado implements Serializable {
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int titulo;
+	private double titulo;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int justificacion;
+	private double justificacion;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int planteamiento;
+	private double planteamiento;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int objetivos;
+	private double objetivos;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int alcances;
+	private double alcances;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int marcoteorico;
+	private double marcoteorico;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int disenoMetodologico;
+	private double disenoMetodologico;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int preosupuestoYcronograma;
+	private double preosupuestoYcronograma;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int referencias;
+	private double referencias;
 	
 	// Evaluacion de la forma del anteproyecto 30%
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int cumplimineto;
+	private double cumplimineto;
 	
 	@Min(value = 1,message = "La nota debe estar entre 1 y 5")
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
-	private int redacion;
+	private double redacion;
 	
 	
 	
@@ -97,19 +97,19 @@ public class Calificado implements Serializable {
 	
 	
 	
-	public int getJustificacion() {
+	public double getJustificacion() {
 		return justificacion;
 	}
 
 
 
-	public void setJustificacion(int justificacion) {
+	public void setJustificacion(double justificacion) {
 		this.justificacion = justificacion;
 	}
 
 
 
-	public void setDisenoMetodologico(int disenoMetodologico) {
+	public void setDisenoMetodologico(double disenoMetodologico) {
 		this.disenoMetodologico = disenoMetodologico;
 	}
 
@@ -127,61 +127,61 @@ public class Calificado implements Serializable {
 
 
 
-	public int getTitulo() {
+	public double getTitulo() {
 		return titulo;
 	}
 
 
 
-	public int getPlanteamiento() {
+	public double getPlanteamiento() {
 		return planteamiento;
 	}
 
 
 
-	public int getObjetivos() {
+	public double getObjetivos() {
 		return objetivos;
 	}
 
 
 
-	public int getAlcances() {
+	public double getAlcances() {
 		return alcances;
 	}
 
 
 
-	public int getMarcoteorico() {
+	public double getMarcoteorico() {
 		return marcoteorico;
 	}
 
 
 
-	public int getDisenoMetodologico() {
+	public double getDisenoMetodologico() {
 		return disenoMetodologico;
 	}
 
 
 
-	public int getPreosupuestoYcronograma() {
+	public double getPreosupuestoYcronograma() {
 		return preosupuestoYcronograma;
 	}
 
 
 
-	public int getReferencias() {
+	public double getReferencias() {
 		return referencias;
 	}
 
 
 
-	public int getCumplimineto() {
+	public double getCumplimineto() {
 		return cumplimineto;
 	}
 
 
 
-	public int getRedacion() {
+	public double getRedacion() {
 		return redacion;
 	}
 
@@ -193,61 +193,61 @@ public class Calificado implements Serializable {
 
 
 
-	public void setTitulo(int titulo) {
+	public void setTitulo(double titulo) {
 		this.titulo = titulo;
 	}
 
 
 
-	public void setPlanteamiento(int planteamiento) {
+	public void setPlanteamiento(double planteamiento) {
 		this.planteamiento = planteamiento;
 	}
 
 
 
-	public void setObjetivos(int objetivos) {
+	public void setObjetivos(double objetivos) {
 		this.objetivos = objetivos;
 	}
 
 
 
-	public void setAlcances(int alcances) {
+	public void setAlcances(double alcances) {
 		this.alcances = alcances;
 	}
 
 
 
-	public void setMarcoteorico(int marcoteorico) {
+	public void setMarcoteorico(double marcoteorico) {
 		this.marcoteorico = marcoteorico;
 	}
 
 
 
-	public void setDiseñoMetodologico(int disenoMetodologico) {
+	public void setDiseñoMetodologico(double disenoMetodologico) {
 		this.disenoMetodologico = disenoMetodologico;
 	}
 
 
 
-	public void setPreosupuestoYcronograma(int preosupuestoYcronograma) {
+	public void setPreosupuestoYcronograma(double preosupuestoYcronograma) {
 		this.preosupuestoYcronograma = preosupuestoYcronograma;
 	}
 
 
 
-	public void setReferencias(int referencias) {
+	public void setReferencias(double referencias) {
 		this.referencias = referencias;
 	}
 
 
 
-	public void setCumplimineto(int cumplimineto) {
+	public void setCumplimineto(double cumplimineto) {
 		this.cumplimineto = cumplimineto;
 	}
 
 
 
-	public void setRedacion(int redacion) {
+	public void setRedacion(double redacion) {
 		this.redacion = redacion;
 	}
 

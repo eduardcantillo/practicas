@@ -1,6 +1,5 @@
 package com.bolsadeideas.spring.horario.datajpa.app.controller;
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
