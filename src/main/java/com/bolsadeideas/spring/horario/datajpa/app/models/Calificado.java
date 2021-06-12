@@ -74,6 +74,8 @@ public class Calificado implements Serializable {
 	@Max(value=5,message = "La nota debe estar entre 1 Y 5")
 	private double redacion;
 	
+	@NotBlank(message = "Selecione un estado valido")
+	private String estado;
 	
 	
 
@@ -97,6 +99,18 @@ public class Calificado implements Serializable {
 	
 	
 	
+	public String getEstado() {
+		return estado;
+	}
+
+
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+
+
 	public double getJustificacion() {
 		return justificacion;
 	}

@@ -78,6 +78,10 @@ public class Proyecto implements Serializable {
 	@JoinColumn(name="id_tipo_proyecto")
 	private TipoProyecto tipoProyecto;
 
+	private double nota;
+	
+	private boolean rechazado;
+	
 	public Proyecto() {
 	}
 
@@ -92,6 +96,24 @@ public class Proyecto implements Serializable {
 
 	public void setInicio(Date inicio) {
 		this.inicio = inicio;
+	}
+
+	
+	
+	public boolean isRechazado() {
+		return rechazado;
+	}
+
+	public void setRechazado(boolean rechazado) {
+		this.rechazado = rechazado;
+	}
+
+	public double getNota() {
+		return nota;
+	}
+
+	public void setNota(double nota) {
+		this.nota = nota;
 	}
 
 	public Date getFinalizacion() {

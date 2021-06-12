@@ -137,11 +137,11 @@
                                     </div>
                                     <div class="col-sm-6">
                                     <label for="alcances" class="text-dark">Estado</label>
-                                        <select class="form-control">
-                                        <option>-Seleccione una opcion- </option>
-                                        <option>Rechazado</option>
-                                        <option>Correcciones</option>
-                                        <option>Aprobar</option>
+                                        <select class="form-control" th:field="*{estado}">
+                                        <option value="" selected>Seleccione una opcion</option>
+                                        <option value="RECHAZADO">Rechazado</option>
+                                        <option value="CORRECCIONES">Correcciones</option>
+                                        <option value="APROBADO">Aprobar</option>
                                         </select>
                                     </div>
                                 </div>
