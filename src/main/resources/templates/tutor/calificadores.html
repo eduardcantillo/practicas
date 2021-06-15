@@ -53,6 +53,7 @@
                                             <th>Nombres</th>
                                             <th>Apellido</th>
                                             <th>Telefono</th>
+                                            <th>Calificacion</th>
                                              
                                             
                                         </tr>
@@ -64,7 +65,8 @@
                                             <td th:text="${proyec.nombres}"></td>
                                             <td th:text="${proyec.apellidos}"></td>
                                             <td th:text="${proyec.telefono}"></td>
-                                          
+                                          	<td ><a th:href="@{'/estudiante/'+${id}+'/calificaciones/'+${proyec.codigo}}" th:text="ver" class="btn btn-primary">
+                                          </a></td>
                                         </tr>
                                     </tbody>
                                 </table>

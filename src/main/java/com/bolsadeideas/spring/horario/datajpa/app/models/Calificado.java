@@ -77,6 +77,7 @@ public class Calificado implements Serializable {
 	@NotBlank(message = "Selecione un estado valido")
 	private String estado;
 	
+	private String documento;
 	
 
 	private double nota;
@@ -101,6 +102,18 @@ public class Calificado implements Serializable {
 	
 	public String getEstado() {
 		return estado;
+	}
+
+
+
+	public String getDocumento() {
+		return documento;
+	}
+
+
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
 	}
 
 

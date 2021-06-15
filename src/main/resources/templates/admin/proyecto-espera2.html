@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout/head :: head">
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+       <ul th:replace="layout/sidebar :: sidebar"></ul>
+
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav th:replace="layout/topbar :: topbar">
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    
+                    <h1 class="h3 mb-2 text-gray-800"><strong th:text="${finalizados!=null ? 'Finalizados':'Generer Reporte'}" >Finalizados</strong></h1>
+                    <p class="mb-4 text-dark" th:text="${finalizados!=null ? 'Listado de los proyectos finalizados':'Listado de todos los proyectos'}"></p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-danger" th:if="${finalizados!=null}" >Listado de proyectos finalizados</h6>
+                            <h6 class="m-0 font-weight-bold text-danger" th:if="${reportes!=null}" >Listado de todos los proyectos</h6>
+                        </div>
+                        <div class="card-body">
+                        <form th:if="${reportes!=nul}" method="post" th:action="@{'/admin/generarReporte'}">
+                       	
+                       	 <input type="date" name="inicio" class="mb-2">
+                         <input type="date" name="fin" class="mx-4 mb-2">
+                         <input type="submit" value="buscar" class="mx-4 mb-2 btn btn-primary btn-small" >
+                         
+                          
+                           </form>
+                            <div class="table-responsive">
+                            
+                                <table th:if="${finalizados!=null}" class="table table-bordered" id="dataTable" >
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Integrantes</th>
+                                            <th>Estado</th>
+                                            <th >Tipo Proyecto</th>
+                                            <th>Director</th>
+                                            <th>Acciones</th>
+                                            
+                                        </tr>
+                                        
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr th:each="proyec :${propuestas}">
+                                            <td th:text="${proyec.idProyecto}"></td>
+                                            <td th:text="${proyec.estudiante.usuario.nombres}"></td>
+                                            <td th:text="${proyec.estado.nombre}"></td>
+                                            <td th:text="${proyec.tipoProyecto.name}"></td>
+                                            <td th:if="${proyec.diriges!=null && not proyec.diriges.isEmpty()}" th:text="${proyec.diriges.get(0).tutor.usuario.nombres}"></td>
+                                            <td th:if="${proyec.diriges==null ||  proyec.diriges.isEmpty()}" >No tiene tutor asignado</td>
+                                            <td > <a th:href="@{'/admin/verProyecto/'+${proyec.idProyecto}}" class="btn btn-primary">ver</a>
+                                            </td>
+                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                
+                                 <table th:if="${reportes!=null}" class="table table-bordered" id="dataTable" >
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Integrantes</th>
+                                            <th>Estado</th>
+                                            <th >Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
+                                            <th>Acciones</th>
+                                            
+                                        </tr>
+                                        
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr th:each="proyec :${propuestas}">
+                                            <td th:text="${proyec.titulo}"></td>
+                                            <td th:text="${proyec.estudiante.usuario.nombres}"></td>
+                                            <td th:text="${proyec.estado.nombre}"></td>
+                                            <td th:text="${proyec.inicio}"></td>
+                                            <td th:text="${proyec.finalizacion}"></td>
+                                            <td > <a th:href="@{'/admin/verProyecto/'+${proyec.idProyecto}}" class="btn btn-primary">ver</a>
+                                            </td>
+                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <P>Cantidad: <strong th:if="${propuestas.size>0}" th:text="${propuestas.size()}"></strong></P>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+           
+
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2020</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+	<div th:replace="layout/import-js :: import-js"></div>
+
+
+</body>
+
+</html>

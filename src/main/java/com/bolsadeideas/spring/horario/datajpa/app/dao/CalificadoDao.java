@@ -12,6 +12,9 @@ public interface CalificadoDao extends CrudRepository<Calificado, Integer> {
 	@Query("select c from Calificado c join fetch c.evaluador e where e.idEvaluador=?1 and c.actual=true")
 	public Calificado getActualByCalificador(String calificador);
 	
+	@Query("select c from Calificado c join fetch c.evaluador e where e.idEvaluador=?1 and c.actual=true and c.proyecto.idProyecto=?2")
+	public Calificado getActualByCalificadorAndProyecto(String calificador,int idProyecto);
+	
 	@Query("select c from Calificado c join fetch c.proyecto p where p.idProyecto=?1 and c.actual=true")
 	public List<Calificado> getAllActualById(int idProyecto);
 }

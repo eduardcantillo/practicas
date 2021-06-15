@@ -23,6 +23,7 @@ import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.annotation.Secured;
@@ -268,13 +269,27 @@ public class AdminController {
 	public String ProyectoEspera(Model model,Principal principal) {
 		model.addAttribute("titulo", "Listado de los proyectos Aprobados");
 		Usuario user=this.user.getUsuarioById(principal.getName());
-		List<Proyecto> activos=this.proyectoDao.findByEstado("APROBADOS");
+		List<Proyecto> activos=this.proyectoDao.findByTwoState("APROBADOS","CORRECCION");
 		model.addAttribute("aprobados","");
 		model.addAttribute("propuestas",activos);
 		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
 		
 
 		return "admin/proyecto-espera";
+		
+	}
+	
+	@GetMapping("/proyectos-finalizados")
+	public String ProyectosFinalizados(Model model,Principal principal) {
+		model.addAttribute("titulo", "Listado de los proyectos finalizados");
+		Usuario user=this.user.getUsuarioById(principal.getName());
+		List<Proyecto> activos=this.proyectoDao.findByEstado("ACCEPTADOS");
+		model.addAttribute("finalizados","");
+		model.addAttribute("propuestas",activos);
+		model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		
+
+		return "admin/proyecto-espera2";
 		
 	}
 	
@@ -544,4 +559,37 @@ public String DocumentosPropuestas(Model model,@PathVariable int idProyecto,Prin
 	model.addAttribute("infop", "");
 	return "estudiante/documentos";
 }
+
+@GetMapping("/generarReporte")
+public String reportes (Model model,Principal principal) {
+	
+	model.addAttribute("titulo", "Listado de los proyectos Aprobados");
+	Usuario user=this.user.getUsuarioById(principal.getName());
+	List<Proyecto> activos=(List<Proyecto>)this.proyectoDao.findAll();
+	model.addAttribute("reportes","");
+	model.addAttribute("propuestas",activos);
+	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+	
+
+	return "admin/proyecto-espera2";
+	
+
+}
+@PostMapping("/generarReporte")
+public String reportesByFecha (Model model,Principal principal,@DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
+		@DateTimeFormat(pattern="yyyy-MM-dd")Date fin) {
+	
+	model.addAttribute("titulo", "Listado de los proyectos Aprobados");
+	Usuario user=this.user.getUsuarioById(principal.getName());
+	List<Proyecto> activos=this.proyectoDao.entreFecha(inicio, fin);
+	model.addAttribute("reportes","");
+	model.addAttribute("propuestas",activos);
+	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
+	
+	return "admin/proyecto-espera2";
+	
+
+}
+
+
 }

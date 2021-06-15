@@ -11,6 +11,7 @@ import com.bolsadeideas.spring.horario.datajpa.app.models.Estado;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Proyecto;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Tutor;
 import com.bolsadeideas.spring.horario.datajpa.app.models.Usuario;
+import com.bolsadeideas.spring.horario.datajpa.app.service.IUploadService;
 import com.bolsadeideas.spring.horario.datajpa.app.service.IUsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.util.Date;
@@ -66,6 +68,9 @@ public class EvaluadorController {
 	
 	@Autowired
     private JavaMailSender mailSender;
+	
+	@Autowired
+	private IUploadService upload;
 
 	@GetMapping({ "/index", "", "/" })
 	public String info(Principal principal, Model model) {
@@ -186,7 +191,7 @@ public class EvaluadorController {
 
 	@PostMapping("/calificar")
 	public String calificar(@Valid Calificado calificado, BindingResult result, @RequestParam int idProyecto,
-			Principal principal, Model model) {
+			Principal principal, Model model,MultipartFile archivo) {
 
 		Usuario user = service.getUsuarioById(principal.getName());
 		Asiganado modificar = this.asignados.getByEstadoAndEvaluadorAndIdProyecto(principal.getName(), true,
@@ -202,7 +207,7 @@ public class EvaluadorController {
 		model.addAttribute("idProyecto", modificar.getProyecto().getIdProyecto());
 		model.addAttribute("nombre", (user.getNombres() + " " + user.getApellidos()).toUpperCase());
 
-		if (result.hasErrors()) {
+		if (result.hasErrors() || archivo.isEmpty()) {
 
 			return "calificador/calificacion";
 		}
@@ -227,7 +232,14 @@ public class EvaluadorController {
 			actual.setActual(false);
 			this.califica.save(actual);
 		}
-
+		
+		try {
+			calificado.setDocumento(upload.copy(archivo));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		this.califica.save(calificado);
 
 		modificar.setCalificable(false);
@@ -252,10 +264,6 @@ public class EvaluadorController {
 				notaFinal += item.getNota();
 			}
 
-			System.out.println("la nota final es: " + notaFinal / actuales.size());
-			System.out.println("Se encontraron " + actuales.size() + " calificaciones");
-
-			System.out.println(actuales.size());
 
 			if (actuales.size() > 2) {
 

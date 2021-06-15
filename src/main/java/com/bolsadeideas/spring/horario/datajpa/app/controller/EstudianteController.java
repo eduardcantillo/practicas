@@ -74,6 +74,9 @@ public class EstudianteController {
 	@Autowired 
 	private DocumentoDao documento;
 	
+	@Autowired
+	private CalificadoDao calificado;
+	
 	
 	
 	@GetMapping("/subir")
@@ -539,7 +542,7 @@ public class EstudianteController {
 		}
 	 }
 	
-	 @Secured({"ROLE_EVALUADOR","ROLE_ADMINISTRADOR"})
+	 @Secured({"ROLE_EVALUADOR","ROLE_ADMINISTRADOR","ROLE_ESTUDIANTE"})
 	 @RequestMapping("/download/{filename}")
 	 @ResponseBody
 	 public void shows(@PathVariable String filename, HttpServletResponse response) {
@@ -583,10 +586,27 @@ public class EstudianteController {
 	    
 	    	model.addAttribute("nombre",(user.getNombres()+" "+user.getApellidos()).toUpperCase());
 	    	model.addAttribute("calificadores",calificadores);
+	    	model.addAttribute("id", proyecto.getIdProyecto());
 	    	
 	    	
 	    return "tutor/calificadores";
 	    }
+	 
+	 @GetMapping("/{idProyecto}/calificaciones/{idTutor}")
+	 public String verCalificacion(Model model, Principal principal,@PathVariable String idTutor,@PathVariable int idProyecto) {
+		 Usuario user=this.user.getUsuarioById(principal.getName());
+		 
+		Calificado calificado= this.calificado.getActualByCalificadorAndProyecto(idTutor, idProyecto);
+		 if(calificado==null) {
+			 return "redirect:/estudiante/calificadores";
+		 }
+		 
+		 model.addAttribute("calificado",calificado);
+		 model.addAttribute("ver","");
+		 model.addAttribute("titulo", "calificaciones");
+		 model.addAttribute("nombre", (user.getNombres()+" "+user.getApellidos()).toUpperCase());
+		 return "calificador/calificacion";
+	 }
 	
 	
 }
