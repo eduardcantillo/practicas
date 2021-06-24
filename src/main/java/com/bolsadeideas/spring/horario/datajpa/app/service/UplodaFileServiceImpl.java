@@ -37,7 +37,7 @@ public class UplodaFileServiceImpl implements IUploadService {
 	@Override
 	public String copy(MultipartFile file) throws IOException {
 
-		String uniqueFile = UUID.randomUUID().toString();
+		String uniqueFile = UUID.randomUUID().toString()+"_"+file.getOriginalFilename();
 		Path rootPath = getPath(uniqueFile);
 		Files.copy(file.getInputStream(), rootPath);
 		

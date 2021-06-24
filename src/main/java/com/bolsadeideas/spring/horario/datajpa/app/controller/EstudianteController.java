@@ -464,7 +464,7 @@ public class EstudianteController {
 			String uniqueFile=null;
 			try {
 				uniqueFile=this.upload.copy(archivo);
-				proyecto.setDocumento(uniqueFile+"."+arch);
+				proyecto.setDocumento(uniqueFile);
 			} catch (IOException e) {
 				model.addAttribute("proyecto", proyecto);
 				model.addAttribute("tipes", (List<TipoProyecto>)tipe.findAll());
